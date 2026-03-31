@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://d4ht3yljfmjvs"]
+
+[ext_resource type="Script" uid="uid://bj8ymnkhtlwat" path="res://entities/objects/object.gd" id="1_l2ofb"]
+[ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="2_3xuqs"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_rfk7t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l2ofb"]
+size = Vector2(1.25, 1.25)
+
+[node name="Object" type="Sprite2D" unique_id=1528497884]
+scale = Vector2(50, 50)
+texture = SubResource("CanvasTexture_rfk7t")
+script = ExtResource("1_l2ofb")
+
+[node name="ClickableArea" type="Area2D" parent="." unique_id=1286198309]
+script = ExtResource("2_3xuqs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea" unique_id=1983390619]
+shape = SubResource("RectangleShape2D_l2ofb")
