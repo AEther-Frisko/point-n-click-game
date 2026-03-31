@@ -18,3 +18,5 @@ script = ExtResource("2_3xuqs")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea" unique_id=1983390619]
 shape = SubResource("RectangleShape2D_l2ofb")
+
+[connection signal="mouse_entered" from="ClickableArea" to="." method="_on_clickable_area_mouse_entered"]

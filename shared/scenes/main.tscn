@@ -1,8 +1,24 @@
 [gd_scene format=3 uid="uid://cxh75pt8f652c"]
 
 [ext_resource type="PackedScene" uid="uid://d4ht3yljfmjvs" path="res://entities/objects/object.tscn" id="1_cf20m"]
+[ext_resource type="PackedScene" uid="uid://cmpvvhj4yvt4x" path="res://systems/ui/text_display.tscn" id="2_1nha7"]
+[ext_resource type="Script" uid="uid://cn6xbudwf5irq" path="res://systems/ui/text_display.gd" id="2_n4xtn"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
-[node name="Object" parent="." unique_id=1528497884 instance=ExtResource("1_cf20m")]
+[node name="GUI" type="Control" parent="." unique_id=1726270139]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="TextDisplay" parent="GUI" unique_id=964846851 instance=ExtResource("2_1nha7")]
+layout_mode = 1
+offset_left = 12.0
+offset_top = 615.0
+offset_right = 52.0
+offset_bottom = 638.0
+script = ExtResource("2_n4xtn")
+
+[node name="World" type="Node2D" parent="." unique_id=931716194]
+
+[node name="Object" parent="World" unique_id=1528497884 instance=ExtResource("1_cf20m")]
 position = Vector2(550, 300)
