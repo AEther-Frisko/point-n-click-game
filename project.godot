@@ -19,6 +19,14 @@ run/main_scene="uid://cxh75pt8f652c"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[file_customization]
+
+folder_colors={
+"res://entities/": "red",
+"res://shared/": "purple",
+"res://systems/": "blue"
+}
+
 [input]
 
 click={

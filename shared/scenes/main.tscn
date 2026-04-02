@@ -8,14 +8,31 @@
 
 [node name="GUI" type="Control" parent="." unique_id=1726270139]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="TextDisplay" parent="GUI" unique_id=964846851 instance=ExtResource("2_1nha7")]
+[node name="MarginContainer" type="MarginContainer" parent="GUI" unique_id=1798613746]
 layout_mode = 1
-offset_left = 12.0
-offset_top = 615.0
-offset_right = 52.0
-offset_bottom = 638.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="TextDisplay" parent="GUI/MarginContainer" unique_id=964846851 instance=ExtResource("2_1nha7")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 30
+text = "Test"
 script = ExtResource("2_n4xtn")
 
 [node name="World" type="Node2D" parent="." unique_id=931716194]
