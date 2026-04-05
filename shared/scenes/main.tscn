@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://cxh75pt8f652c"]
 
-[ext_resource type="PackedScene" uid="uid://d4ht3yljfmjvs" path="res://entities/objects/object.tscn" id="1_cf20m"]
-[ext_resource type="PackedScene" uid="uid://cmpvvhj4yvt4x" path="res://systems/ui/text_display.tscn" id="2_1nha7"]
-[ext_resource type="Script" uid="uid://cn6xbudwf5irq" path="res://systems/ui/text_display.gd" id="2_n4xtn"]
+[ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
+[ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="3_n4xtn"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
@@ -13,7 +12,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
+script = ExtResource("1_1nha7")
 
 [node name="MarginContainer" type="MarginContainer" parent="GUI" unique_id=1798613746]
 layout_mode = 1
@@ -27,15 +27,14 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="TextDisplay" parent="GUI/MarginContainer" unique_id=964846851 instance=ExtResource("2_1nha7")]
+[node name="Label" type="Label" parent="GUI/MarginContainer" unique_id=1228492692]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_font_sizes/font_size = 30
-text = "Test"
-script = ExtResource("2_n4xtn")
+theme_override_font_sizes/font_size = 25
 
 [node name="World" type="Node2D" parent="." unique_id=931716194]
 
-[node name="Object" parent="World" unique_id=1528497884 instance=ExtResource("1_cf20m")]
-position = Vector2(550, 300)
+[node name="Prop" parent="World" unique_id=1491848127 instance=ExtResource("3_n4xtn")]
+position = Vector2(540, 360)
+scale = Vector2(7, 7)

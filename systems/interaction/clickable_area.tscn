@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bu6oosbwb10a6"]
+
+[ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="1_nw7ri"]
+
+[node name="ClickableArea" type="Area2D" unique_id=489507799]
+script = ExtResource("1_nw7ri")
