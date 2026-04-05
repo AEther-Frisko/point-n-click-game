@@ -7,3 +7,6 @@ func _ready() -> void:
 func _on_prop_clicked(desc: String) -> void:
 	var label = get_node("MarginContainer/Label")
 	label.text = desc
+	await get_tree().create_timer(3.0).timeout
+	label.text = ""
+	
