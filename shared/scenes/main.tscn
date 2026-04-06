@@ -41,9 +41,9 @@ theme_override_font_sizes/font_size = 25
 
 [node name="Prop" parent="World" unique_id=1491848127 instance=ExtResource("3_n4xtn")]
 position = Vector2(401, 314)
-propData = ExtResource("3_m4i1k")
+prop_data = ExtResource("3_m4i1k")
 
 [node name="Prop2" parent="World" unique_id=422878812 instance=ExtResource("3_n4xtn")]
 position = Vector2(688, 314)
 scale = Vector2(2, 2)
-propData = ExtResource("4_m4i1k")
+prop_data = ExtResource("4_m4i1k")
