@@ -27,7 +27,7 @@ window/size/viewport_height=720
 [file_customization]
 
 folder_colors={
-"res://builds/": "pink",
+"res://builds/": "green",
 "res://entities/": "red",
 "res://shared/": "purple",
 "res://systems/": "blue"

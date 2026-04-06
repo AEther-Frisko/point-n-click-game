@@ -37,5 +37,10 @@ theme_override_font_sizes/font_size = 25
 [node name="World" type="Node2D" parent="." unique_id=931716194]
 
 [node name="Prop" parent="World" unique_id=1491848127 instance=ExtResource("3_n4xtn")]
-position = Vector2(540, 360)
+position = Vector2(401, 314)
 scale = Vector2(7, 7)
+
+[node name="Prop2" parent="World" unique_id=422878812 instance=ExtResource("3_n4xtn")]
+position = Vector2(688, 314)
+scale = Vector2(7, 7)
+description = "This is another object."

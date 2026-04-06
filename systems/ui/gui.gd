@@ -2,20 +2,32 @@ extends Control
 
 
 func _ready() -> void:
-	var prop = get_node("../World/Prop") # definitely want to change this later
+	# definitely want to change this later, just testing
+	var prop = get_node("../World/Prop")
+	var prop2 = get_node("../World/Prop2")
 	prop.prop_clicked.connect(_on_prop_clicked)
+	prop2.prop_clicked.connect(_on_prop_clicked)
 
 func _on_prop_clicked(desc: String) -> void:
 	var label = get_node("MarginContainer/Label")
 	
-	# Display prop text
+	# timer configuration
+	# should only create a timer if one doesn't exist
+	var fade_timer = get_node_or_null("FadeTimer")
+	if fade_timer == null:
+		fade_timer = Timer.new()
+		fade_timer.name = "FadeTimer"
+		add_child(fade_timer)
+	
+	# display prop text
 	label.text = desc
 	fade_node(label, Color.WHITE, 0.25)
 	
-	await get_tree().create_timer(3.0).timeout
+	fade_timer.start(3.0)
+	await fade_timer.timeout
 	
-	# Hide prop text
-	fade_node(label, Color.TRANSPARENT, 1.0)
+	# hide prop text
+	fade_node(label, Color.TRANSPARENT, 0.5)
 
 ## Uses the modulate property on a CanvasItem to create a fade effect.
 ##
