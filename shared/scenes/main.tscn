@@ -1,11 +1,14 @@
 [gd_scene format=3 uid="uid://cxh75pt8f652c"]
 
 [ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
+[ext_resource type="Resource" uid="uid://ywo2utjp76nk" path="res://entities/props/test_object.tres" id="3_m4i1k"]
 [ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="3_n4xtn"]
+[ext_resource type="Resource" uid="uid://b1qe8bvlb82mu" path="res://entities/props/test_object_2.tres" id="4_m4i1k"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
 [node name="GUI" type="Control" parent="." unique_id=1726270139]
+z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,9 +41,9 @@ theme_override_font_sizes/font_size = 25
 
 [node name="Prop" parent="World" unique_id=1491848127 instance=ExtResource("3_n4xtn")]
 position = Vector2(401, 314)
-scale = Vector2(7, 7)
+propData = ExtResource("3_m4i1k")
 
 [node name="Prop2" parent="World" unique_id=422878812 instance=ExtResource("3_n4xtn")]
 position = Vector2(688, 314)
-scale = Vector2(7, 7)
-description = "This is another object."
+scale = Vector2(2, 2)
+propData = ExtResource("4_m4i1k")

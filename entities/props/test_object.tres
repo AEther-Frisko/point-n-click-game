@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PropData" format=3 uid="uid://ywo2utjp76nk"]
+
+[ext_resource type="Script" uid="uid://dvdndyww02s8t" path="res://entities/props/prop_data.gd" id="1_4yxjo"]
+[ext_resource type="Texture2D" uid="uid://ck65xypecjrwo" path="res://icon.svg" id="2_h1rx5"]
+
+[resource]
+script = ExtResource("1_4yxjo")
+description = "This is an object."
+texture = ExtResource("2_h1rx5")
+metadata/_custom_type_script = "uid://dvdndyww02s8t"

@@ -1,18 +1,14 @@
 [gd_scene format=3 uid="uid://q57c5k076cra"]
 
 [ext_resource type="Script" uid="uid://ba5hfywndq3vs" path="res://entities/props/prop.gd" id="1_cdqb3"]
-[ext_resource type="Texture2D" uid="uid://ck65xypecjrwo" path="res://icon.svg" id="1_vlpb1"]
 [ext_resource type="PackedScene" uid="uid://bu6oosbwb10a6" path="res://systems/interaction/clickable_area.tscn" id="2_7c000"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cdqb3"]
-size = Vector2(16, 16)
 
 [node name="Prop" type="Node2D" unique_id=1491848127]
 script = ExtResource("1_cdqb3")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=623627401]
-scale = Vector2(0.125, 0.125)
-texture = ExtResource("1_vlpb1")
 
 [node name="ClickableArea" parent="." unique_id=489507799 instance=ExtResource("2_7c000")]
 
