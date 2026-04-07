@@ -33,6 +33,10 @@ folder_colors={
 "res://systems/": "blue"
 }
 
+[global_group]
+
+props="All interactible props in the scene."
+
 [input]
 
 click={

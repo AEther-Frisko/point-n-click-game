@@ -1,11 +1,12 @@
 extends Node2D
 
 @export var prop_data: PropData
-@export var cursor: Texture2D
 
 signal prop_clicked(desc: String)
 
 func _ready() -> void:
+	add_to_group("props")
+	
 	# set prop sprite
 	var sprite := get_node("Sprite2D")
 	sprite.texture = prop_data.texture
@@ -26,7 +27,7 @@ func _on_clicked() -> void:
 	prop_clicked.emit(prop_data.description)
 
 func _on_hover_start() -> void:
-	Input.set_custom_mouse_cursor(cursor)
+	Input.set_custom_mouse_cursor(prop_data.cursor)
 
 func _on_hover_end() -> void:
 	pass

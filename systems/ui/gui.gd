@@ -1,16 +1,20 @@
 extends Control
 
+@onready var text_display: Label = %TextDisplay 
+@onready var props = get_tree().get_nodes_in_group("props")
 
-func _ready() -> void:
-	# definitely want to change this later, just testing
-	var prop = get_node("../World/Prop")
-	var prop2 = get_node("../World/Prop2")
-	prop.prop_clicked.connect(_on_prop_clicked)
-	prop2.prop_clicked.connect(_on_prop_clicked)
+# Keeps all prop signals connected to the GUI, even as they are added/removed.
+# But it's kinda ugly and I will likely be changing it later
+func _process(_delta: float) -> void:
+	var current_props = get_tree().get_nodes_in_group("props")
+	if props != current_props:
+		props = current_props
+		for prop in props:
+			if !prop.prop_clicked.is_connected(_on_prop_clicked):
+				prop.prop_clicked.connect(_on_prop_clicked)
 
+## Handles GUI changes that should occur when a Prop is clicked.
 func _on_prop_clicked(desc: String) -> void:
-	var label = get_node("MarginContainer/Label")
-	
 	# timer configuration
 	# should only create a timer if one doesn't exist
 	var fade_timer = get_node_or_null("FadeTimer")
@@ -20,19 +24,18 @@ func _on_prop_clicked(desc: String) -> void:
 		add_child(fade_timer)
 	
 	# display prop text
-	label.text = desc
-	fade_node(label, Color.WHITE, 0.25)
+	text_display.text = desc
+	fade_node(text_display, Color.WHITE, 0.25)
 	
 	fade_timer.start(3.0)
 	await fade_timer.timeout
 	
 	# hide prop text
-	fade_node(label, Color.TRANSPARENT, 0.5)
+	fade_node(text_display, Color.TRANSPARENT, 0.5)
 
-## Uses the modulate property on a CanvasItem to create a fade effect.
-##
-## node: node to be faded to another colour
-## fade_color: final colour of the node (i.e. Color.TRANSPARENT hides a node)
+## Uses the modulate property on a [CanvasItem] to tween between its current colour
+## and the specified [param fade_color] (i.e. [constant Color.TRANSPARENT] makes the node fade out
+## until it is invisible).
 func fade_node(node: CanvasItem, fade_color: Color, fade_duration: float) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(node, "modulate", fade_color, fade_duration)
