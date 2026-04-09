@@ -2,17 +2,15 @@
 
 [ext_resource type="Script" uid="uid://ba5hfywndq3vs" path="res://entities/props/prop.gd" id="1_cdqb3"]
 [ext_resource type="PackedScene" uid="uid://bu6oosbwb10a6" path="res://systems/interaction/clickable_area.tscn" id="2_7c000"]
-[ext_resource type="Texture2D" uid="uid://3mexdu7ncd4s" path="res://test_cursor.png" id="2_cdqb3"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cdqb3"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7c000"]
 
 [node name="Prop" type="Node2D" unique_id=1491848127]
 script = ExtResource("1_cdqb3")
-cursor = ExtResource("2_cdqb3")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=623627401]
 
 [node name="ClickableArea" parent="." unique_id=489507799 instance=ExtResource("2_7c000")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea" unique_id=1073838876]
-shape = SubResource("RectangleShape2D_cdqb3")
+shape = SubResource("RectangleShape2D_7c000")

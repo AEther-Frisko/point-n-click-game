@@ -3,8 +3,12 @@ extends Control
 @onready var text_display: Label = %TextDisplay 
 @onready var props = get_tree().get_nodes_in_group("props")
 
+func _ready() -> void:
+	# text display is invisible until needed
+	text_display.set_modulate(Color.TRANSPARENT)
+
 # Keeps all prop signals connected to the GUI, even as they are added/removed.
-# But it's kinda ugly and I will likely be changing it later
+# But it's kinda ugly so I might be changing it later
 func _process(_delta: float) -> void:
 	var current_props = get_tree().get_nodes_in_group("props")
 	if props != current_props:
