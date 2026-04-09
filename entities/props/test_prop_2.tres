@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PropData" format=3 uid="uid://drrlukkl5thkv"]
+
+[ext_resource type="Texture2D" uid="uid://3mexdu7ncd4s" path="res://test_cursor.png" id="1_ifvym"]
+[ext_resource type="Script" uid="uid://dvdndyww02s8t" path="res://entities/props/prop_data.gd" id="2_7c3my"]
+[ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="3_7c3my"]
+
+[resource]
+script = ExtResource("2_7c3my")
+description = "Grey cube..."
+texture = ExtResource("3_7c3my")
+cursor = ExtResource("1_ifvym")
+metadata/_custom_type_script = "uid://dvdndyww02s8t"

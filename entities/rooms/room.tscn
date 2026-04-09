@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bbn8venl4g5go"]
+
+[ext_resource type="Texture2D" uid="uid://dwxlt5vwsj8k6" path="res://entities/rooms/test-room.png" id="1_4jni1"]
+[ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="1_gfcs5"]
+[ext_resource type="Resource" uid="uid://cb0vnu06uq7ty" path="res://entities/props/test_prop_1.tres" id="3_3rrti"]
+[ext_resource type="Resource" uid="uid://drrlukkl5thkv" path="res://entities/props/test_prop_2.tres" id="4_wv86s"]
+
+[node name="Room" type="Node2D" unique_id=66319938]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=392754324]
+position = Vector2(960, 540)
+texture = ExtResource("1_4jni1")
+
+[node name="Props" type="Node2D" parent="." unique_id=1755922862]
+
+[node name="Prop" parent="Props" unique_id=1491848127 instance=ExtResource("1_gfcs5")]
+position = Vector2(297, 875)
+prop_data = ExtResource("3_3rrti")
+
+[node name="Prop2" parent="Props" unique_id=1237188023 instance=ExtResource("1_gfcs5")]
+position = Vector2(312, 714)
+prop_data = ExtResource("4_wv86s")

@@ -44,5 +44,4 @@ func _on_hover_start() -> void:
 	Input.set_custom_mouse_cursor(prop_data.cursor)
 
 func _on_hover_end() -> void:
-	pass
 	Input.set_custom_mouse_cursor(null)

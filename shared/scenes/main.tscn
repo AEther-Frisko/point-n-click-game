@@ -1,9 +1,7 @@
 [gd_scene format=3 uid="uid://cxh75pt8f652c"]
 
 [ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
-[ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="2_1nha7"]
-[ext_resource type="Resource" uid="uid://ywo2utjp76nk" path="res://entities/props/test_object.tres" id="3_n4xtn"]
-[ext_resource type="Resource" uid="uid://b1qe8bvlb82mu" path="res://entities/props/test_object_2.tres" id="4_m4i1k"]
+[ext_resource type="PackedScene" uid="uid://bbn8venl4g5go" path="res://entities/rooms/room.tscn" id="2_1nha7"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
@@ -39,11 +37,4 @@ theme_override_font_sizes/font_size = 50
 
 [node name="World" type="Node2D" parent="." unique_id=931716194]
 
-[node name="Prop" parent="World" unique_id=1491848127 instance=ExtResource("2_1nha7")]
-position = Vector2(714, 386)
-scale = Vector2(1.5, 1.5)
-prop_data = ExtResource("3_n4xtn")
-
-[node name="Prop2" parent="World" unique_id=2008101674 instance=ExtResource("2_1nha7")]
-position = Vector2(1251, 568)
-prop_data = ExtResource("4_m4i1k")
+[node name="Room" parent="World" unique_id=66319938 instance=ExtResource("2_1nha7")]
