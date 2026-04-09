@@ -6,6 +6,8 @@ extends Node2D
 @onready var sprite := get_node("Sprite2D")
 
 signal prop_clicked(desc: String)
+signal prop_hover_started(prop: Node)
+signal prop_hover_ended(prop: Node)
 
 func update_texture(new_texture: Texture2D) -> void:
 	# set prop sprite
@@ -41,7 +43,7 @@ func _on_clicked() -> void:
 	prop_clicked.emit(prop_data.description)
 
 func _on_hover_start() -> void:
-	Input.set_custom_mouse_cursor(prop_data.cursor)
+	prop_hover_started.emit(self)
 
 func _on_hover_end() -> void:
-	Input.set_custom_mouse_cursor(null)
+	prop_hover_ended.emit(self)

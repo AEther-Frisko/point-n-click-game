@@ -3,6 +3,13 @@ extends Control
 @onready var text_display: Label = %TextDisplay 
 @onready var props = get_tree().get_nodes_in_group("props")
 
+var hovered_areas: Array
+
+var cursors := {
+	"Default" : null,
+	"Examine" : load("res://test_cursor.png")
+}
+
 func _ready() -> void:
 	# text display is invisible until needed
 	text_display.set_modulate(Color.TRANSPARENT)
@@ -16,6 +23,8 @@ func _process(_delta: float) -> void:
 		for prop in props:
 			if !prop.prop_clicked.is_connected(_on_prop_clicked):
 				prop.prop_clicked.connect(_on_prop_clicked)
+				prop.prop_hover_started.connect(_on_prop_hovered)
+				prop.prop_hover_ended.connect(remove_hovered_area)
 
 ## Handles GUI changes that should occur when a Prop is clicked.
 func _on_prop_clicked(desc: String) -> void:
@@ -43,3 +52,15 @@ func _on_prop_clicked(desc: String) -> void:
 func fade_node(node: CanvasItem, fade_color: Color, fade_duration: float) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(node, "modulate", fade_color, fade_duration)
+
+func _on_prop_hovered(area: Node) -> void:
+	add_hovered_area(area)
+	Input.set_custom_mouse_cursor(cursors["Examine"])
+
+func add_hovered_area(area: Node) -> void:
+	hovered_areas.append(area)
+
+func remove_hovered_area(area: Node) -> void:
+	hovered_areas.erase(area)
+	if hovered_areas.is_empty():
+		Input.set_custom_mouse_cursor(null)
