@@ -18,17 +18,28 @@ func _process(_delta: float) -> void:
 	if current_interactables != interactables:
 		update_interactables(current_interactables)
 
-## Ensures any new interactable [Node]s are added to [member interactables].
+## Ensures any new interactable [Node]s are added to [member interactables],
+## and ones that no longer exist are removed.
 func update_interactables(new_interactables: Array[Node]) -> void:
+	# check for interactables that no longer exist
+	for interactable in interactables:
+		if not new_interactables.has(interactable):
+			remove_interactable(interactable)
+	
+	# check for new interactables
 	for interactable in new_interactables:
-		if !interactables.has(interactable):
+		if not interactables.has(interactable):
 			add_interactable(interactable)
 
-## Adds a new interactable [Node] to the [Array] and connects its signals.
+## Adds a new interactable [Node] to [member interactables] and connects its signals.
 func add_interactable(interactable: Node) -> void:
 	interactables.append(interactable)
 	interactable.hover_started.connect(add_hovered_area)
 	interactable.hover_ended.connect(remove_hovered_area)
+
+## Remove an interactable [Node] from [member interactables].
+func remove_interactable(interactable: Node) -> void:
+	interactables.erase(interactable)
 
 ## Adds a new area [Node] to [member hovered_areas] and updates the cursor accordingly.
 func add_hovered_area(area: Node) -> void:
