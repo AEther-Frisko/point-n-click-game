@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://cxh75pt8f652c"]
 
 [ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
+[ext_resource type="Script" uid="uid://bbsi6eaaa5bob" path="res://systems/interaction/interaction_manager.gd" id="1_n4xtn"]
 [ext_resource type="PackedScene" uid="uid://bbn8venl4g5go" path="res://entities/rooms/room.tscn" id="2_1nha7"]
 
 [node name="Main" type="Node" unique_id=1543907092]
+
+[node name="InteractionManager" type="Node" parent="." unique_id=713478181]
+script = ExtResource("1_n4xtn")
 
 [node name="GUI" type="Control" parent="." unique_id=1726270139]
 z_index = 1

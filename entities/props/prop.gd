@@ -1,13 +1,9 @@
 @tool # allows sprites and collision shapes to show up in the editor
-extends Node2D
+class_name Prop extends Interactable
 
 @export var prop_data: PropData
 
 @onready var sprite := get_node("Sprite2D")
-
-signal prop_clicked(desc: String)
-signal prop_hover_started(prop: Node)
-signal prop_hover_ended(prop: Node)
 
 func update_texture(new_texture: Texture2D) -> void:
 	# set prop sprite
@@ -20,18 +16,13 @@ func update_texture(new_texture: Texture2D) -> void:
 	collision_shape.shape.size = texture_size
 
 func _ready() -> void:
+	if not Engine.is_editor_hint():
+		super._ready()
 	add_to_group("props")
 	
 	if prop_data == null:
 		return
 	update_texture(prop_data.texture)
-	
-	# connect clickable area signals
-	if not Engine.is_editor_hint():
-		var clickable_area = get_node("ClickableArea")
-		clickable_area.clicked.connect(_on_clicked)
-		clickable_area.mouse_entered.connect(_on_hover_start)
-		clickable_area.mouse_exited.connect(_on_hover_end)
 
 func _process(_delta: float) -> void:
 	if prop_data == null:
@@ -40,10 +31,4 @@ func _process(_delta: float) -> void:
 		update_texture(prop_data.texture)
 
 func _on_clicked() -> void:
-	prop_clicked.emit(prop_data.description)
-
-func _on_hover_start() -> void:
-	prop_hover_started.emit(self)
-
-func _on_hover_end() -> void:
-	prop_hover_ended.emit(self)
+	clicked.emit(prop_data.description)

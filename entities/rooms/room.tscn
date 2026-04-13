@@ -20,3 +20,5 @@ prop_data = ExtResource("3_3rrti")
 [node name="Prop2" parent="Props" unique_id=1237188023 instance=ExtResource("1_gfcs5")]
 position = Vector2(312, 714)
 prop_data = ExtResource("4_wv86s")
+
+[node name="Doors" type="Node2D" parent="." unique_id=2070332888]

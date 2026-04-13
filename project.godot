@@ -39,6 +39,7 @@ folder_colors={
 [global_group]
 
 props="All interactible props in the scene."
+interactables=""
 
 [input]
 
