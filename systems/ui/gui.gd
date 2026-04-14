@@ -2,6 +2,7 @@ extends Control
 
 @onready var text_display: Label = %TextDisplay
 @onready var screen_fade: ColorRect = $ScreenFade
+@onready var fps_display: Label = %FpsDisplay
 
 var fade_timer: Timer
 
@@ -17,6 +18,9 @@ func _ready() -> void:
 	fade_timer = Timer.new()
 	fade_timer.name = "FadeTimer"
 	add_child(fade_timer)
+
+func _process(_delta: float) -> void:
+	fps_display.text = "FPS: " + str(Engine.get_frames_per_second())
 
 ## Uses the modulate property on a [CanvasItem] to tween between its current colour
 ## and the specified [param fade_color] (i.e. [constant Color.TRANSPARENT] makes the node fade out
