@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://obdjgcwlvni4"]
+
+[ext_resource type="Texture2D" uid="uid://dwxlt5vwsj8k6" path="res://entities/rooms/test-room.png" id="1_87bpn"]
+[ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="2_f2dop"]
+[ext_resource type="Script" uid="uid://dvdndyww02s8t" path="res://entities/props/prop_data.gd" id="3_2ahal"]
+[ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="4_e58jg"]
+[ext_resource type="Script" uid="uid://dapxy6n44rykv" path="res://entities/doors/door.gd" id="5_e58jg"]
+[ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="6_uobik"]
+
+[sub_resource type="Resource" id="Resource_uobik"]
+script = ExtResource("3_2ahal")
+description = "Big cube....."
+texture = ExtResource("4_e58jg")
+metadata/_custom_type_script = "uid://dvdndyww02s8t"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pncls"]
+size = Vector2(154, 305)
+
+[node name="Room2" type="Node2D" unique_id=1255308850]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=393671033]
+position = Vector2(960, 540)
+texture = ExtResource("1_87bpn")
+
+[node name="Props" type="Node2D" parent="." unique_id=749957006]
+
+[node name="Prop" parent="Props" unique_id=1491848127 instance=ExtResource("2_f2dop")]
+position = Vector2(1351, 774)
+scale = Vector2(1.5, 1.5)
+prop_data = SubResource("Resource_uobik")
+
+[node name="Doors" type="Node2D" parent="." unique_id=679481030]
+
+[node name="Door" type="Node2D" parent="Doors" unique_id=1268574779]
+position = Vector2(944, 698)
+script = ExtResource("5_e58jg")
+destination = "room"
+metadata/_custom_type_script = "uid://dapxy6n44rykv"
+
+[node name="ClickableArea" type="Area2D" parent="Doors/Door" unique_id=139570487]
+script = ExtResource("6_uobik")
+metadata/_custom_type_script = "uid://g6sjksb4ootf"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door/ClickableArea" unique_id=937209174]
+position = Vector2(-2, -176.5)
+shape = SubResource("RectangleShape2D_pncls")

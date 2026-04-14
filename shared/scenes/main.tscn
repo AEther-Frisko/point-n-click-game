@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
 [ext_resource type="Script" uid="uid://bbsi6eaaa5bob" path="res://systems/interaction/interaction_manager.gd" id="1_n4xtn"]
-[ext_resource type="PackedScene" uid="uid://bbn8venl4g5go" path="res://entities/rooms/room.tscn" id="2_1nha7"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
@@ -41,6 +40,15 @@ size_flags_vertical = 8
 theme_override_constants/outline_size = 20
 theme_override_font_sizes/font_size = 50
 
-[node name="World" type="Node2D" parent="." unique_id=931716194]
+[node name="ScreenFade" type="ColorRect" parent="GUI" unique_id=1620118203]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
-[node name="Room" parent="World" unique_id=66319938 instance=ExtResource("2_1nha7")]
+[node name="World" type="Node2D" parent="." unique_id=931716194]
+unique_name_in_owner = true

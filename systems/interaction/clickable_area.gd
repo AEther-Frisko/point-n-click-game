@@ -1,4 +1,4 @@
-extends Area2D
+class_name ClickableArea extends Area2D
 
 signal clicked()
 

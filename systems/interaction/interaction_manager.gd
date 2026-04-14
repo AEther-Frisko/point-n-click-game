@@ -4,6 +4,9 @@ extends Node
 @onready var interactables := get_tree().get_nodes_in_group("interactables")
 
 @onready var gui := %GUI
+@onready var world := %World
+
+var current_room : Node2D
 
 ## All interactables currently being hovered over by the mouse.
 var hovered_areas : Array[Node]
@@ -11,11 +14,12 @@ var hovered_areas : Array[Node]
 ## Cursor [Texture] to load depending on the context.
 @export var cursors := {
 	"Default" : preload("res://shared/images/cursors/cur_default.png"),
-	"Look" : preload("res://shared/images/cursors/cur_look.png")
+	"Look" : preload("res://shared/images/cursors/cur_look.png"),
+	"Walk" : preload("res://shared/images/cursors/cur_walk.png")
 }
 
 func _ready() -> void:
-	set_cursor("Default")
+	load_room("room")
 
 func _process(_delta: float) -> void:
 	# check if all interactables in scene are accounted for
@@ -46,6 +50,8 @@ func add_interactable(interactable: Node) -> void:
 	var groups := interactable.get_groups()
 	if groups.has("props"):
 		interactable.clicked.connect(_on_prop_clicked)
+	elif groups.has("doors"):
+		interactable.clicked.connect(_on_door_clicked)
 
 ## Remove an interactable [Node] from [member interactables].
 func remove_interactable(interactable: Node) -> void:
@@ -57,6 +63,8 @@ func add_hovered_area(area: Node) -> void:
 	var groups := area.get_groups()
 	if groups.has("props"):
 		set_cursor("Look")
+	elif groups.has("doors"):
+		set_cursor("Walk")
 
 ## Removes an area [Node] from [member hovered_areas] and updates the cursor if necessary.
 func remove_hovered_area(area: Node) -> void:
@@ -68,5 +76,34 @@ func remove_hovered_area(area: Node) -> void:
 func set_cursor(new_cursor: String) -> void:
 	Input.set_custom_mouse_cursor(cursors[new_cursor])
 
+## Clears tracked [member interactables] and [member hovered_areas].
+func reset_interactables() -> void:
+	interactables.clear()
+	hovered_areas.clear()
+	set_cursor("Default")
+
+# might move the room loading/unloading into a separate manager later
+# since it's not directly interaction-related
+## Unloads the [member current_room] from the [SceneTree].
+func unload_room() -> void:
+	if is_instance_valid(current_room):
+		current_room.queue_free()
+	reset_interactables()
+	current_room = null
+
+func load_room(destination: String) -> void:
+	unload_room()
+	var room_path := "res://entities/rooms/%s.tscn" % destination
+	var new_room = load(room_path)
+	if new_room:
+		current_room = new_room.instantiate()
+		world.add_child(current_room)
+
 func _on_prop_clicked(desc: String) -> void:
 	gui.display_description(desc)
+
+func _on_door_clicked(destination: String) -> void:
+	gui.transition_screen()
+	await gui.verify_tweened_node(gui.screen_fade)
+	load_room(destination)
+	

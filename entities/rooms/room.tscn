@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://dvdndyww02s8t" path="res://entities/props/prop_data.gd" id="3_3rrti"]
 [ext_resource type="Texture2D" uid="uid://boau6tul4tt8g" path="res://entities/props/test_prop_1.png" id="4_wv86s"]
 [ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="5_wv86s"]
+[ext_resource type="Script" uid="uid://dapxy6n44rykv" path="res://entities/doors/door.gd" id="6_pl5rr"]
+[ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="7_bwubf"]
 
 [sub_resource type="Resource" id="Resource_pl5rr"]
 script = ExtResource("3_3rrti")
@@ -17,6 +19,9 @@ script = ExtResource("3_3rrti")
 description = "Grey cube..."
 texture = ExtResource("5_wv86s")
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwubf"]
+size = Vector2(153, 301)
 
 [node name="Room" type="Node2D" unique_id=66319938]
 
@@ -35,3 +40,17 @@ position = Vector2(324, 704)
 prop_data = SubResource("Resource_bwubf")
 
 [node name="Doors" type="Node2D" parent="." unique_id=2070332888]
+
+[node name="Door" type="Node2D" parent="Doors" unique_id=494872254]
+position = Vector2(944, 693)
+script = ExtResource("6_pl5rr")
+destination = "room_2"
+metadata/_custom_type_script = "uid://yrbq3bfk1sid"
+
+[node name="ClickableArea" type="Area2D" parent="Doors/Door" unique_id=1652914156]
+script = ExtResource("7_bwubf")
+metadata/_custom_type_script = "uid://g6sjksb4ootf"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door/ClickableArea" unique_id=89892307]
+position = Vector2(-1.5, -170.5)
+shape = SubResource("RectangleShape2D_bwubf")
