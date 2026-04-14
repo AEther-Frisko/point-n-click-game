@@ -3,14 +3,19 @@ extends Node
 ## All interactables in the scene.
 @onready var interactables := get_tree().get_nodes_in_group("interactables")
 
+@onready var gui := %GUI
+
 ## All interactables currently being hovered over by the mouse.
 var hovered_areas : Array[Node]
 
 ## Cursor [Texture] to load depending on the context.
-var cursors := {
-	"Default" : null,
-	"Examine" : load("res://test_cursor.png")
+@export var cursors := {
+	"Default" : preload("res://shared/images/cursors/cur_default.png"),
+	"Look" : preload("res://shared/images/cursors/cur_look.png")
 }
+
+func _ready() -> void:
+	set_cursor("Default")
 
 func _process(_delta: float) -> void:
 	# check if all interactables in scene are accounted for
@@ -36,6 +41,11 @@ func add_interactable(interactable: Node) -> void:
 	interactables.append(interactable)
 	interactable.hover_started.connect(add_hovered_area)
 	interactable.hover_ended.connect(remove_hovered_area)
+	
+	# type-dependent connections
+	var groups := interactable.get_groups()
+	if groups.has("props"):
+		interactable.clicked.connect(_on_prop_clicked)
 
 ## Remove an interactable [Node] from [member interactables].
 func remove_interactable(interactable: Node) -> void:
@@ -46,7 +56,7 @@ func add_hovered_area(area: Node) -> void:
 	hovered_areas.append(area)
 	var groups := area.get_groups()
 	if groups.has("props"):
-		set_cursor("Examine")
+		set_cursor("Look")
 
 ## Removes an area [Node] from [member hovered_areas] and updates the cursor if necessary.
 func remove_hovered_area(area: Node) -> void:
@@ -57,3 +67,6 @@ func remove_hovered_area(area: Node) -> void:
 ## Sets the mouse cursor to a specified [member cursors].
 func set_cursor(new_cursor: String) -> void:
 	Input.set_custom_mouse_cursor(cursors[new_cursor])
+
+func _on_prop_clicked(desc: String) -> void:
+	gui.display_description(desc)

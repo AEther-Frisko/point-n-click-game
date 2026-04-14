@@ -1,21 +1,10 @@
 extends Control
 
-@onready var text_display: Label = %TextDisplay 
-@onready var props = get_tree().get_nodes_in_group("props")
+@onready var text_display: Label = %TextDisplay
 
 func _ready() -> void:
 	# text display is invisible until needed
 	text_display.set_modulate(Color.TRANSPARENT)
-
-# Keeps all relevant signals connected to the GUI, even as they are added/removed.
-# But it's very ugly so I'll probably be changing it later
-func _process(_delta: float) -> void:
-	var current_props = get_tree().get_nodes_in_group("props")
-	if props != current_props:
-		props = current_props
-		for prop in props:
-			if !prop.clicked.is_connected(_on_prop_clicked):
-				prop.clicked.connect(_on_prop_clicked)
 
 ## Uses the modulate property on a [CanvasItem] to tween between its current colour
 ## and the specified [param fade_color] (i.e. [constant Color.TRANSPARENT] makes the node fade out
@@ -24,8 +13,8 @@ func fade_node(node: CanvasItem, fade_color: Color, fade_duration: float) -> voi
 	var tween = get_tree().create_tween()
 	tween.tween_property(node, "modulate", fade_color, fade_duration)
 
-## Handles GUI changes that should occur when a Prop is clicked.
-func _on_prop_clicked(desc: String) -> void:
+## Displays input description text to the screen for a limited time.
+func display_description(desc: String) -> void:
 	# timer configuration
 	# should only create a timer if one doesn't exist
 	var fade_timer = get_node_or_null("FadeTimer")
@@ -34,12 +23,12 @@ func _on_prop_clicked(desc: String) -> void:
 		fade_timer.name = "FadeTimer"
 		add_child(fade_timer)
 	
-	# display prop text
+	# display text
 	text_display.text = desc
 	fade_node(text_display, Color.WHITE, 0.25)
 	
 	fade_timer.start(3.0)
 	await fade_timer.timeout
 	
-	# hide prop text
+	# hide text
 	fade_node(text_display, Color.TRANSPARENT, 0.5)
