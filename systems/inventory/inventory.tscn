@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://2lb4kqnd5vrx"]
+
+[ext_resource type="Texture2D" uid="uid://ck65xypecjrwo" path="res://icon.svg" id="1_gjlg3"]
+[ext_resource type="Script" uid="uid://dme1ec5cgqxxt" path="res://systems/inventory/inventory.gd" id="1_jq0nu"]
+
+[node name="Inventory" type="Control" unique_id=599938922]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_jq0nu")
+
+[node name="Button" type="Button" parent="." unique_id=674827223]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -124.0
+offset_right = 124.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 25
+toggle_mode = true
+text = "Inventory"
+
+[node name="InventoryDisplay" type="PanelContainer" parent="." unique_id=1264747571]
+custom_minimum_size = Vector2(425, 425)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.071
+anchor_top = 1.0
+anchor_right = 0.071
+anchor_bottom = 1.0
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="InventoryDisplay" unique_id=823291965]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="InventoryDisplay/MarginContainer" unique_id=897046141]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="InventoryDisplay/MarginContainer/ScrollContainer" unique_id=1098201363]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="TextureRect" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=2066663358]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect2" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=1684626762]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect3" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=1562537949]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect4" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=620839127]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect5" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=1244486869]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect6" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=1154233995]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect7" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=286884047]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect8" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=1698377423]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect9" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=1411221092]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[node name="TextureRect10" type="TextureRect" parent="InventoryDisplay/MarginContainer/ScrollContainer/GridContainer" unique_id=2043998891]
+layout_mode = 2
+texture = ExtResource("1_gjlg3")
+
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
+[connection signal="toggled" from="Button" to="." method="_on_button_toggled"]

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
 [ext_resource type="Script" uid="uid://bbsi6eaaa5bob" path="res://systems/interaction/interaction_manager.gd" id="1_n4xtn"]
+[ext_resource type="PackedScene" uid="uid://2lb4kqnd5vrx" path="res://systems/inventory/inventory.tscn" id="3_n4xtn"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
@@ -47,6 +48,10 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 25
+
+[node name="Inventory" parent="GUI/MarginContainer" unique_id=599938922 instance=ExtResource("3_n4xtn")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="ScreenFade" type="ColorRect" parent="GUI" unique_id=1620118203]
 modulate = Color(1, 1, 1, 0)

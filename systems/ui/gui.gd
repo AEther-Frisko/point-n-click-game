@@ -3,6 +3,7 @@ extends Control
 @onready var text_display: Label = %TextDisplay
 @onready var screen_fade: ColorRect = $ScreenFade
 @onready var fps_display: Label = %FpsDisplay
+@onready var inventory: Control = %Inventory
 
 var fade_timer: Timer
 
