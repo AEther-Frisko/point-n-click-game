@@ -1,8 +1,10 @@
 @tool # allows sprites and collision shapes to show up in the editor
 class_name Prop extends Interactable
 
+## Data properties for the [Prop].
 @export var prop_data: PropData
 
+## The [Sprite2D] to visually display the [Prop].
 @onready var sprite := get_node_or_null("Sprite2D")
 
 func _ready() -> void:
@@ -20,6 +22,7 @@ func _ready() -> void:
 	prop_data.texture_changed.connect(update_texture)
 	update_texture()
 
+## Updates the [member sprite]'s [Texture2D] to match the current [PropData].
 func update_texture(new_texture = prop_data.texture) -> void:
 	# set prop sprite
 	sprite.texture = new_texture
@@ -32,5 +35,6 @@ func update_texture(new_texture = prop_data.texture) -> void:
 	var collision_shape := get_node("ClickableArea/CollisionShape2D")
 	collision_shape.shape.size = texture_size
 
+## Triggered when the [Prop] is clicked.
 func _on_clicked() -> void:
 	clicked.emit(prop_data.description)

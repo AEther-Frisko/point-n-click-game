@@ -1,12 +1,21 @@
 extends Control
 
+## [Label] for displaying interaction text.
 @onready var text_display: Label = %TextDisplay
+
+## [ColorRect] for creating a screen fade effect.
 @onready var screen_fade: ColorRect = $ScreenFade
+
+## [Label] for displaying the program's current FPS, mostly for debug purposes.
 @onready var fps_display: Label = %FpsDisplay
+
+## Parent of the inventory scene.
 @onready var inventory: Control = %Inventory
 
+## Timer for certain fade effects.
 var fade_timer: Timer
 
+## Emitted when a tween finishes on a [CanvasItem].
 signal tween_finished(node: CanvasItem)
 
 func _ready() -> void:
@@ -31,6 +40,7 @@ func fade_node(node: CanvasItem, fade_color: Color, fade_duration: float) -> voi
 	tween.finished.connect(_on_tween_finished.bind(node))
 	tween.tween_property(node, "modulate", fade_color, fade_duration)
 
+## Indicates when a specified [CanvasItem] has finished its tween animation.
 func _on_tween_finished(node: CanvasItem) -> void:
 	tween_finished.emit(node)
 

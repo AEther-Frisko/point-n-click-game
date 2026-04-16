@@ -1,7 +1,9 @@
 class_name ClickableArea extends Area2D
 
+## Emitted when the attached [CollisionShape2D] is clicked.
 signal clicked()
 
+## The attached [CollisionShape2D].
 @onready var collision_shape = get_node_or_null("CollisionShape2D")
 
 func _ready() -> void:

@@ -1,9 +1,12 @@
-@tool
 class_name Item extends Interactable
 
+## The [TextureRect] node to visually display the [Item].
 @onready var texture_rect := get_node_or_null("TextureRect")
+
+## Replacement for the [ClickableArea] that plays nice with [Control] nodes.
 @onready var area_container: Control = $AreaContainer
 
+## Data properties for the [Item].
 @export var item_data: ItemData
 
 func _ready() -> void:
@@ -18,23 +21,27 @@ func _ready() -> void:
 	item_data.texture_changed.connect(update_texture)
 	update_texture()
 	
-	# doesn't need it?
+	# doesn't need it, I think?
 	clickable_area.queue_free()
 	
 	area_container.mouse_entered.connect(_on_hover_start)
 	area_container.mouse_exited.connect(_on_hover_end)
 	area_container.gui_input.connect(_on_input)
 
+## Updates the [member texture_rect]'s [Texture2D] to match the current [ItemData].
 func update_texture(new_texture = item_data.texture) -> void:
 	texture_rect.texture = new_texture
 
+## Triggered when the [Item] detects user input, but only cares about mouse clicks.
 func _on_input(event: InputEvent) -> void:
 	if event.is_action_pressed("click"):
 		get_viewport().set_input_as_handled()
 		clicked.emit("You are clicking an item")
 
+## Triggered when the mouse hovers over the [Item].
 func _on_hover_start() -> void:
 	hover_started.emit(self)
 
+## Triggered when the mouse stops hovering over the [Item].
 func _on_hover_end() -> void:
 	hover_ended.emit(self)

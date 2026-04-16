@@ -1,14 +1,18 @@
 extends Node
 
-## All interactables in the scene.
+## All [Interactable]s in the scene.
 @onready var interactables := get_tree().get_nodes_in_group("interactables")
 
+## The parent of all GUI ([Control]) elements.
 @onready var gui := %GUI
+
+## The parent of all elements in the world ([Node2d]).
 @onready var world := %World
 
+## Currently loaded room scene.
 var current_room : Node2D
 
-## All interactables currently being hovered over by the mouse.
+## All [Interactable]s currently being hovered over by the mouse.
 var hovered_areas : Array[Node]
 
 ## Cursor [Texture] to load depending on the context.
@@ -28,20 +32,20 @@ func _process(_delta: float) -> void:
 	if current_interactables != interactables:
 		update_interactables(current_interactables)
 
-## Ensures any new interactable [Node]s are added to [member interactables],
+## Ensures any new [Interactable]s are added to [member interactables],
 ## and ones that no longer exist are removed.
 func update_interactables(new_interactables: Array[Node]) -> void:
-	# check for interactables that no longer exist
+	# check for [Interactable]s that no longer exist
 	for interactable in interactables:
 		if not new_interactables.has(interactable):
 			remove_interactable(interactable)
 	
-	# check for new interactables
+	# check for new [Interactable]s
 	for interactable in new_interactables:
 		if not interactables.has(interactable):
 			add_interactable(interactable)
 
-## Adds a new interactable [Node] to [member interactables] and connects its signals.
+## Adds a new [Interactable] to [member interactables] and connects its signals.
 func add_interactable(interactable: Node) -> void:
 	interactables.append(interactable)
 	if interactable.hover_started.is_connected(add_hovered_area):
@@ -58,7 +62,7 @@ func add_interactable(interactable: Node) -> void:
 	elif groups.has("items"):
 		interactable.clicked.connect(_on_item_clicked)
 
-## Remove an interactable [Node] from [member interactables].
+## Removes an [Interactable] from [member interactables].
 func remove_interactable(interactable: Node) -> void:
 	interactables.erase(interactable)
 
@@ -79,7 +83,7 @@ func remove_hovered_area(area: Node) -> void:
 func set_cursor(new_cursor: String) -> void:
 	Input.set_custom_mouse_cursor(cursors[new_cursor])
 
-## Sets the mouse cursor based on the speciied [Node]'s type.
+## Sets the mouse cursor based on the speciied [Node]'s type/group.
 func set_cursor_by_type(area: Node) -> void:
 	# special cases
 	match area.get_class():
@@ -111,6 +115,7 @@ func unload_room() -> void:
 	reset_interactables()
 	current_room = null
 
+## Loads a new room [PackedScene] according to the specified destination [String].
 func load_room(destination: String) -> void:
 	unload_room()
 	var room_path := "res://entities/rooms/%s.tscn" % destination
@@ -119,9 +124,11 @@ func load_room(destination: String) -> void:
 		current_room = new_room.instantiate()
 		world.add_child(current_room)
 
+## Signals to the [member gui] to display the clicked [Prop]'s description to the screen.
 func _on_prop_clicked(desc: String) -> void:
 	gui.display_description(desc)
 
+## Initiates a room transition according to the clicked [Door]'s destination.
 func _on_door_clicked(destination: String) -> void:
 	gui.transition_screen()
 	await gui.verify_tweened_node(gui.screen_fade)

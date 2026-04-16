@@ -1,19 +1,6 @@
 [gd_scene format=3 uid="uid://2lb4kqnd5vrx"]
 
-[ext_resource type="Texture2D" uid="uid://ck65xypecjrwo" path="res://icon.svg" id="1_gjlg3"]
 [ext_resource type="Script" uid="uid://dme1ec5cgqxxt" path="res://systems/inventory/inventory.gd" id="1_jq0nu"]
-[ext_resource type="Script" uid="uid://bjarm57wje3pb" path="res://entities/items/item_data.gd" id="2_nm754"]
-[ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="3_nm754"]
-
-[sub_resource type="Resource" id="Resource_8ijeq"]
-script = ExtResource("2_nm754")
-texture = ExtResource("1_gjlg3")
-metadata/_custom_type_script = "uid://bjarm57wje3pb"
-
-[sub_resource type="Resource" id="Resource_sqq8g"]
-script = ExtResource("2_nm754")
-texture = ExtResource("3_nm754")
-metadata/_custom_type_script = "uid://bjarm57wje3pb"
 
 [node name="Inventory" type="Control" unique_id=599938922]
 layout_mode = 3
@@ -24,7 +11,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_jq0nu")
-items = Array[ExtResource("2_nm754")]([SubResource("Resource_8ijeq"), SubResource("Resource_sqq8g")])
 
 [node name="Button" type="Button" parent="." unique_id=674827223]
 layout_mode = 1
