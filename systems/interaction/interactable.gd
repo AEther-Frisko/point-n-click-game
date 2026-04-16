@@ -1,18 +1,23 @@
-class_name Interactable extends Node2D
+class_name Interactable extends CanvasItem
 
 signal clicked()
 signal hover_started(node: Node)
 signal hover_ended(node: Node)
 
+@onready var clickable_area = get_node_or_null("ClickableArea")
+
 func _ready() -> void:
 	add_to_group("interactables")
 	
-	# connect signals to attached clickable area, if there is one
-	var clickable_area = get_node_or_null("ClickableArea")
-	if clickable_area != null:
-		clickable_area.clicked.connect(_on_clicked)
-		clickable_area.mouse_entered.connect(_on_hover_start)
-		clickable_area.mouse_exited.connect(_on_hover_end)
+	# create clickable area if there isn't one
+	if not clickable_area:
+		clickable_area = ClickableArea.new()
+		add_child(clickable_area)
+	
+	# connect clickable area signals
+	clickable_area.clicked.connect(_on_clicked)
+	clickable_area.mouse_entered.connect(_on_hover_start)
+	clickable_area.mouse_exited.connect(_on_hover_end)
 
 func _on_clicked() -> void:
 	clicked.emit()

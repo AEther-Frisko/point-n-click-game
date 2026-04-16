@@ -41,6 +41,7 @@ folder_colors={
 props="All interactible props in the scene."
 interactables=""
 doors=""
+items=""
 
 [input]
 

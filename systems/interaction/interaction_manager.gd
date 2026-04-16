@@ -7,7 +7,6 @@ extends Node
 @onready var world := %World
 
 var current_room : Node2D
-var inventory_connected := false # this feels so gross and hacky but whatever
 
 ## All interactables currently being hovered over by the mouse.
 var hovered_areas : Array[Node]
@@ -32,11 +31,6 @@ func _process(_delta: float) -> void:
 ## Ensures any new interactable [Node]s are added to [member interactables],
 ## and ones that no longer exist are removed.
 func update_interactables(new_interactables: Array[Node]) -> void:
-	# connect inventory signals, if necessary
-	if not inventory_connected:
-		add_interactable(gui.inventory)
-		inventory_connected = true
-	
 	# check for interactables that no longer exist
 	for interactable in interactables:
 		if not new_interactables.has(interactable):
@@ -50,6 +44,8 @@ func update_interactables(new_interactables: Array[Node]) -> void:
 ## Adds a new interactable [Node] to [member interactables] and connects its signals.
 func add_interactable(interactable: Node) -> void:
 	interactables.append(interactable)
+	if interactable.hover_started.is_connected(add_hovered_area):
+		return
 	interactable.hover_started.connect(add_hovered_area)
 	interactable.hover_ended.connect(remove_hovered_area)
 	
@@ -59,6 +55,8 @@ func add_interactable(interactable: Node) -> void:
 		interactable.clicked.connect(_on_prop_clicked)
 	elif groups.has("doors"):
 		interactable.clicked.connect(_on_door_clicked)
+	elif groups.has("items"):
+		interactable.clicked.connect(_on_item_clicked)
 
 ## Remove an interactable [Node] from [member interactables].
 func remove_interactable(interactable: Node) -> void:
@@ -67,7 +65,7 @@ func remove_interactable(interactable: Node) -> void:
 ## Adds a new area [Node] to [member hovered_areas] and updates the cursor accordingly.
 func add_hovered_area(area: Node) -> void:
 	hovered_areas.append(area)
-	set_cursor_by_group(area)
+	set_cursor_by_type(area)
 
 ## Removes an area [Node] from [member hovered_areas] and updates the cursor if necessary.
 func remove_hovered_area(area: Node) -> void:
@@ -75,24 +73,28 @@ func remove_hovered_area(area: Node) -> void:
 	if hovered_areas.is_empty():
 		set_cursor("Default")
 		return
-	set_cursor_by_group(hovered_areas.back())
+	set_cursor_by_type(hovered_areas.back())
 
 ## Sets the mouse cursor to a specified [member cursors].
 func set_cursor(new_cursor: String) -> void:
 	Input.set_custom_mouse_cursor(cursors[new_cursor])
 
-## Sets the mouse cursor based on the speciied [Node]'s group.
-func set_cursor_by_group(area: Node) -> void:
-	# special case
-	if area == gui.inventory:
-		set_cursor("Use")
-		return
+## Sets the mouse cursor based on the speciied [Node]'s type.
+func set_cursor_by_type(area: Node) -> void:
+	# special cases
+	match area.get_class():
+		"Button":
+			set_cursor("Use")
+		"PanelContainer":
+			set_cursor("Default")
 	
 	var groups := area.get_groups()
 	if groups.has("props"):
 		set_cursor("Look")
 	elif groups.has("doors"):
 		set_cursor("Walk")
+	elif groups.has("items"):
+		set_cursor("Use")
 
 ## Clears tracked [member interactables] and [member hovered_areas].
 func reset_interactables() -> void:
@@ -124,3 +126,7 @@ func _on_door_clicked(destination: String) -> void:
 	gui.transition_screen()
 	await gui.verify_tweened_node(gui.screen_fade)
 	load_room(destination)
+
+# this is temp for testing, will flesh out later
+func _on_item_clicked(text: String) -> void:
+	gui.display_description(text)

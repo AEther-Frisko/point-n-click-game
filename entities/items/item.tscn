@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dm7csltc7ov8a"]
+
+[ext_resource type="Script" uid="uid://bi7aio1a6b2ta" path="res://entities/items/item.gd" id="1_gdl2c"]
+[ext_resource type="Script" uid="uid://bjarm57wje3pb" path="res://entities/items/item_data.gd" id="2_m0k53"]
+
+[sub_resource type="Resource" id="Resource_h1ip2"]
+script = ExtResource("2_m0k53")
+
+[node name="Item" type="Control" unique_id=239630115]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 128.0
+offset_bottom = 128.0
+mouse_behavior_recursive = 2
+script = ExtResource("1_gdl2c")
+item_data = SubResource("Resource_h1ip2")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1893260822]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+stretch_mode = 5
+
+[node name="AreaContainer" type="Control" parent="." unique_id=1498265244]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
