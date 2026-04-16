@@ -1,4 +1,9 @@
 class_name Item extends Interactable
+## A type of [Interactable] that is stored in the inventory.
+##
+## Since this one is a [Control] node, it doesn't use the standard [ClickableArea]
+## for its inputs. Instead, it uses the [Control]'s built-in click detection.
+## This is mostly to make aligning with other [Control] nodes easier.
 
 ## The [TextureRect] node to visually display the [Item].
 @onready var texture_rect := get_node_or_null("TextureRect")

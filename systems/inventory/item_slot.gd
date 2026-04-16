@@ -1,4 +1,8 @@
 class_name ItemSlot extends PanelContainer
+## A slot for holding an [Item] in the inventory.
+##
+## Can either be empty or hold an item, which is determined by attached [ItemData].
+## I might change it to hold an item directly, I haven't decided which would be better yet.
 
 ## Data properties for the [Item] held by this [ItemSlot], if there is one.
 @export var item_data: ItemData:

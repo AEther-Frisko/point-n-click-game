@@ -1,4 +1,8 @@
 class_name ItemData extends Resource
+## Unique data properties for [Item]s.
+##
+## Right now this is just a [Texture2D], which determines
+## how the item will appear on the screen.
 
 ## Emitted when the [member texture] changes.
 signal texture_changed()

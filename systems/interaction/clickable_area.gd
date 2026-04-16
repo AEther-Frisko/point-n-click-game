@@ -1,4 +1,8 @@
 class_name ClickableArea extends Area2D
+## A region of 2D space that detects when it has been clicked.
+##
+## A special type of [Area2D] that looks for [InputEvent]s and signals if it is a mouse click.
+## Meant to be attached to [Interactable]s, but can be used on its own as well.
 
 ## Emitted when the attached [CollisionShape2D] is clicked.
 signal clicked()

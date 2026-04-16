@@ -1,4 +1,7 @@
 extends Control
+## The main inventory logic.
+##
+## Keeps track of and displays all held items. Can be toggled open/closed.
 
 ## Parent of the main inventory UI.
 @onready var inventory_display: PanelContainer = $InventoryDisplay
@@ -28,10 +31,8 @@ func _ready() -> void:
 	add_to_group("interactables")
 	toggle_inventory()
 	
-	for slot in range(9):
-		add_slot()
-		if items.size() > slot:
-			slots[slot].item_data = items[slot]
+	for item in items:
+		add_slot(item)
 	
 	inventory_display.mouse_entered.connect(_on_mouse_entered.bind(inventory_display))
 	inventory_display.mouse_exited.connect(_on_mouse_exited.bind(inventory_display))
@@ -39,13 +40,16 @@ func _ready() -> void:
 	button.mouse_exited.connect(_on_mouse_exited.bind(button))
 
 ## Adds a new [ItemSlot] to the inventory.
-func add_slot() -> void:
+func add_slot(item: ItemData = null) -> void:
 	var slot_instance = item_slot.instantiate()
 	slots.append(slot_instance)
 	inventory_grid.add_child(slot_instance)
 	
 	slot_instance.mouse_entered.connect(_on_mouse_entered.bind(slot_instance))
 	slot_instance.mouse_exited.connect(_on_mouse_exited.bind(slot_instance))
+	
+	if item:
+		slot_instance.item_data = item
 
 ## Removes an [ItemSlot] from the inventory.
 func remove_slot(slot: ItemSlot) -> void:
@@ -55,6 +59,8 @@ func remove_slot(slot: ItemSlot) -> void:
 ## Hides/displays the inventory display panel, by default based on [member button]'s state.
 func toggle_inventory(visibility := button.button_pressed) -> void:
 	inventory_display.visible = visibility
+	if button.button_pressed != visibility:
+		button.button_pressed = visibility
 
 ## Triggered when the [member button] is pressed.
 func _on_button_toggled(toggled_on: bool) -> void:

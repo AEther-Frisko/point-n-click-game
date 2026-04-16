@@ -1,4 +1,8 @@
 class_name Interactable extends CanvasItem
+## The base [Interactable] class, which holds basic interaction functionality.
+##
+## Uses a [ClickableArea] to recieve mouse hovering and clicks,
+## and sends out signals depending on what is recieved.
 
 ## Emitted when the attached [ClickableArea] is clicked on.
 signal clicked()

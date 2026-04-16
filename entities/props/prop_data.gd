@@ -1,5 +1,8 @@
 @tool
 class_name PropData extends Resource
+## Unique data properties for [Prop]s.
+##
+## Right now this is a [Texture2D] and a description [String].
 
 ## Emitted when the [member texture] changes.
 signal texture_changed()

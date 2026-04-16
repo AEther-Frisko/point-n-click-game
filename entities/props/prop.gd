@@ -1,5 +1,9 @@
 @tool # allows sprites and collision shapes to show up in the editor
 class_name Prop extends Interactable
+## A type of [Interactable] for objects that appear in the game world.
+##
+## Right now these are a sprite with a description, but later they will
+## be able to hold items and have states.
 
 ## Data properties for the [Prop].
 @export var prop_data: PropData

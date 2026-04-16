@@ -1,4 +1,8 @@
 class_name Door extends Interactable
+## A type of [Interactable] meant for connecting multiple rooms together.
+##
+## Holds a [member destination] [String], which determines which [PackedScene]
+## to load when it is used.
 
 ## Name of the room [PackedScene] to load when this [Door] is used.[br]
 ## For example:[br]

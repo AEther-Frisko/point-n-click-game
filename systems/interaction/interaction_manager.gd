@@ -1,4 +1,9 @@
 extends Node
+## The main manager for all [Interactable]s in the game.
+##
+## Keeps track of [Interactable]s in the scene and manages how their interactions
+## should affect the game. For example, changing the mouse cursor depending on
+## what kind of [Interactable] is being hovered over.
 
 ## All [Interactable]s in the scene.
 @onready var interactables := get_tree().get_nodes_in_group("interactables")
@@ -113,6 +118,8 @@ func unload_room() -> void:
 	if is_instance_valid(current_room):
 		current_room.queue_free()
 	reset_interactables()
+	if gui.inventory:
+		gui.inventory.toggle_inventory(false)
 	current_room = null
 
 ## Loads a new room [PackedScene] according to the specified destination [String].

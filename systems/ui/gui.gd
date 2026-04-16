@@ -1,4 +1,7 @@
 extends Control
+## The main controller for all GUI functionality.
+##
+## Manages visual changes such as displaying text to the screen, and screen transitions.
 
 ## [Label] for displaying interaction text.
 @onready var text_display: Label = %TextDisplay
