@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="1_gfcs5"]
 [ext_resource type="Script" uid="uid://dvdndyww02s8t" path="res://entities/props/prop_data.gd" id="3_3rrti"]
 [ext_resource type="Texture2D" uid="uid://boau6tul4tt8g" path="res://entities/props/test_prop_1.png" id="4_wv86s"]
+[ext_resource type="Script" uid="uid://bjarm57wje3pb" path="res://entities/items/item_data.gd" id="5_ic8iu"]
 [ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="5_wv86s"]
 [ext_resource type="Script" uid="uid://dapxy6n44rykv" path="res://entities/doors/door.gd" id="6_pl5rr"]
 [ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="7_bwubf"]
@@ -14,10 +15,16 @@ description = "A strange table."
 texture = ExtResource("4_wv86s")
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
 
+[sub_resource type="Resource" id="Resource_q3wsx"]
+script = ExtResource("5_ic8iu")
+texture = ExtResource("5_wv86s")
+metadata/_custom_type_script = "uid://bjarm57wje3pb"
+
 [sub_resource type="Resource" id="Resource_bwubf"]
 script = ExtResource("3_3rrti")
 description = "Grey cube..."
 texture = ExtResource("5_wv86s")
+held_item = SubResource("Resource_q3wsx")
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwubf"]

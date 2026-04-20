@@ -6,12 +6,12 @@ extends Node
 ## what kind of [Interactable] is being hovered over.
 
 ## All [Interactable]s in the scene.
-@onready var interactables := get_tree().get_nodes_in_group("interactables")
+@onready var interactables : Array[Node]
 
 ## The parent of all GUI ([Control]) elements.
 @onready var gui := %GUI
 
-## The parent of all elements in the world ([Node2d]).
+## The parent of all elements in the world ([Node2D]).
 @onready var world := %World
 
 ## Currently loaded room scene.
@@ -30,25 +30,28 @@ var hovered_areas : Array[Node]
 
 func _ready() -> void:
 	load_room("room")
+	get_tree().current_scene.ready.connect(_on_scene_ready)
 
-func _process(_delta: float) -> void:
-	# check if all interactables in scene are accounted for
-	var current_interactables = get_tree().get_nodes_in_group("interactables")
-	if current_interactables != interactables:
-		update_interactables(current_interactables)
+func _on_scene_ready() -> void:
+	update_interactables()
+
+## Cleans an array of any invalid data types (i.e. freed items), and
+## returns the cleaned array.
+func clean_array(dirty_array: Array[Node]) -> Array[Node]:
+	var cleaned_array : Array[Node]
+	for item in dirty_array:
+		if is_instance_valid(item):
+			cleaned_array.append(item)
+	return cleaned_array
 
 ## Ensures any new [Interactable]s are added to [member interactables],
 ## and ones that no longer exist are removed.
-func update_interactables(new_interactables: Array[Node]) -> void:
-	# check for [Interactable]s that no longer exist
-	for interactable in interactables:
-		if not new_interactables.has(interactable):
-			remove_interactable(interactable)
-	
+func update_interactables() -> void:
+	interactables.clear()
 	# check for new [Interactable]s
+	var new_interactables = get_tree().get_nodes_in_group("interactables")
 	for interactable in new_interactables:
-		if not interactables.has(interactable):
-			add_interactable(interactable)
+		add_interactable(interactable)
 
 ## Adds a new [Interactable] to [member interactables] and connects its signals.
 func add_interactable(interactable: Node) -> void:
@@ -89,6 +92,7 @@ func set_cursor(new_cursor: String) -> void:
 	Input.set_custom_mouse_cursor(cursors[new_cursor])
 
 ## Sets the mouse cursor based on the speciied [Node]'s type/group.
+# TODO: Improve this? It feels very hacky.
 func set_cursor_by_type(area: Node) -> void:
 	# special cases
 	match area.get_class():
@@ -99,7 +103,10 @@ func set_cursor_by_type(area: Node) -> void:
 	
 	var groups := area.get_groups()
 	if groups.has("props"):
-		set_cursor("Look")
+		if area.prop_data.held_item:
+			set_cursor("Use")
+		else:
+			set_cursor("Look")
 	elif groups.has("doors"):
 		set_cursor("Walk")
 	elif groups.has("items"):
@@ -129,11 +136,19 @@ func load_room(destination: String) -> void:
 	var new_room = load(room_path)
 	if new_room:
 		current_room = new_room.instantiate()
+		current_room.ready.connect(_on_scene_ready)
 		world.add_child(current_room)
 
-## Signals to the [member gui] to display the clicked [Prop]'s description to the screen.
-func _on_prop_clicked(desc: String) -> void:
-	gui.display_description(desc)
+## If the [Prop] has an item, that item is picked up. Otherwise,
+## the [Item]'s description is displayed.
+func _on_prop_clicked(input) -> void:
+	if input is String:
+		gui.display_description(input)
+	elif input is ItemData:
+		gui.add_item(input)
+		set_cursor("Look")
+		await gui.item_added
+		update_interactables()
 
 ## Initiates a room transition according to the clicked [Door]'s destination.
 func _on_door_clicked(destination: String) -> void:

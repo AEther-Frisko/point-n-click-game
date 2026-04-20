@@ -15,5 +15,6 @@ signal texture_changed()
 	set(new_texture):
 		texture = new_texture
 		texture_changed.emit()
-	get():
-		return texture
+
+## The data of the [Item] held by this object, if there is one.
+@export var held_item: ItemData

@@ -15,7 +15,7 @@ class_name Item extends Interactable
 @export var item_data: ItemData
 
 func _ready() -> void:
-	super._ready()
+	add_to_group("interactables")
 	add_to_group("items")
 	
 	if not texture_rect:
@@ -25,9 +25,6 @@ func _ready() -> void:
 		item_data = ItemData.new()
 	item_data.texture_changed.connect(update_texture)
 	update_texture()
-	
-	# doesn't need it, I think?
-	clickable_area.queue_free()
 	
 	area_container.mouse_entered.connect(_on_hover_start)
 	area_container.mouse_exited.connect(_on_hover_end)

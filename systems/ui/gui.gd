@@ -21,6 +21,9 @@ var fade_timer: Timer
 ## Emitted when a tween finishes on a [CanvasItem].
 signal tween_finished(node: CanvasItem)
 
+## Emitted when a new [Item] is added to the attached inventory.
+signal item_added()
+
 func _ready() -> void:
 	# text display is invisible until needed
 	text_display.set_modulate(Color.TRANSPARENT)
@@ -78,3 +81,22 @@ func verify_tweened_node(node: CanvasItem) -> void:
 	var tweened_node = await tween_finished
 	if tweened_node != node:
 		await verify_tweened_node(node)
+
+func add_item(item: ItemData) -> void:
+	# create an item preview that enters the player's inventory
+	var item_preview = TextureRect.new()
+	item_preview.position = get_viewport().get_mouse_position()
+	item_preview.modulate = Color(1,1,1,0.5) # semi-transparent
+	item_preview.texture = item.texture
+	item_preview.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	item_preview.size = Vector2(64,64)
+	self.add_child(item_preview)
+	
+	#tween animation to make preview move into inventory and then disappear
+	var tween = get_tree().create_tween()
+	tween.tween_property(item_preview, "position", inventory.button.position + (inventory.button.size / 2), 0.5)
+	await tween.finished
+	item_preview.queue_free()
+	
+	inventory.add_item(item)
+	item_added.emit()
