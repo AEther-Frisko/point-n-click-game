@@ -71,6 +71,11 @@ func add_item(item: ItemData) -> void:
 	item_list.append(item)
 	update_inventory()
 
+## Removes an [ItemData] from the [member item_list] and updates the inventory to match.
+func remove_item(item: ItemData) -> void:
+	item_list.erase(item)
+	update_inventory()
+
 ## Re-draws [ItemSlot]s to ensure all [ItemData] is correct.
 func update_inventory() -> void:
 	clear_slots()
@@ -79,6 +84,20 @@ func update_inventory() -> void:
 			add_slot(item_list[item_index])
 		else:
 			add_slot()
+
+## Hide an [Item] without actually removing it from the [ItemSlot].
+func hide_item(item: Item) -> void:
+	for slot in slot_list:
+		if slot.current_item == item:
+			slot.current_item.visible = false
+			return
+
+## Show a previously-hidden [Item].
+func show_item(item: Item) -> void:
+	for slot in slot_list:
+		if slot.current_item == item:
+			slot.current_item.visible = true
+			return
 
 ## Hides/displays the inventory display panel, by default based on [member button]'s state.
 func toggle_inventory(visibility := button.button_pressed) -> void:

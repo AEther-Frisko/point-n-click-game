@@ -20,12 +20,15 @@ var current_room : Node2D
 ## All [Interactable]s currently being hovered over by the mouse.
 var hovered_area_list : Array[Node]
 
+var holding_item := false
+
 ## Cursor [Texture] to load depending on the context.
 @export var cursors := {
 	"Default" : preload("res://shared/images/cursors/cur_default.png"),
 	"Look" : preload("res://shared/images/cursors/cur_look.png"),
 	"Walk" : preload("res://shared/images/cursors/cur_walk.png"),
-	"Use" : preload("res://shared/images/cursors/cur_hand.png")
+	"Use" : preload("res://shared/images/cursors/cur_hand.png"),
+	"Item" : preload("res://shared/images/cursors/cur_item.png")
 }
 
 func _ready() -> void:
@@ -73,7 +76,8 @@ func add_hovered_area(area: Node) -> void:
 func remove_hovered_area(area: Node) -> void:
 	hovered_area_list.erase(area)
 	if hovered_area_list.is_empty():
-		set_cursor("Default")
+		if not holding_item:
+			set_cursor("Default")
 		return
 	set_cursor_by_type(hovered_area_list.back())
 
@@ -84,7 +88,9 @@ func set_cursor(new_cursor: String) -> void:
 ## Sets the mouse cursor based on the speciied [Node]'s type/group.
 # TODO: Improve this? unsure about it still.
 func set_cursor_by_type(area: Node) -> void:
-	if area is Button or area is Item:
+	if holding_item:
+		set_cursor("Item")
+	elif area is Button or area is Item:
 		set_cursor("Use")
 	elif area is Prop:
 		if area.prop_data.held_item:
@@ -106,6 +112,9 @@ func reset_interactables() -> void:
 # since it's not directly interaction-related
 ## Unloads the [member current_room] from the [SceneTree].
 func unload_room() -> void:
+	if holding_item:
+		gui.drop_item()
+		holding_item = false
 	if is_instance_valid(current_room):
 		current_room.queue_free()
 	reset_interactables()
@@ -126,20 +135,39 @@ func load_room(destination: String) -> void:
 func _on_hover_started(area: Node) -> void:
 	add_hovered_area(area)
 	if area is Item:
-		gui.display_description(area.item_data.item_name)
+		gui.display_text(area.item_data.item_name)
 
 func _on_hover_ended(area: Node) -> void:
 	remove_hovered_area(area)
 	if area is Item:
-		gui.hide_description()
+		gui.hide_text()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("click"):
+		return
+	if holding_item:
+		gui.drop_item()
+		holding_item = false
+		set_cursor("Default")
 
 ## If the [Prop] has an item, that item is picked up. Otherwise,
 ## the [Item]'s description is displayed.
 func _on_prop_clicked(input, prop: Prop = null) -> void:
+	if holding_item:
+		# temp for testing
+		gui.display_text("Put item into this thing, I guess?", 3.0)
+		prop.prop_data.held_item = gui.held_item.item_data
+		gui.use_held_item()
+		holding_item = false
+		set_cursor_by_type(hovered_area_list.back())
+		update_interactables()
+		return
+	
 	if input is String:
-		gui.display_description(input, 3.0)
+		gui.display_text(input, 3.0)
 	elif input is ItemData:
 		gui.add_item(input)
+		prop.prop_data.held_item = null
 		if prop.prop_data.is_item:
 			remove_hovered_area(prop)
 			prop.queue_free()
@@ -150,10 +178,27 @@ func _on_prop_clicked(input, prop: Prop = null) -> void:
 
 ## Initiates a room transition according to the clicked [Door]'s destination.
 func _on_door_clicked(destination: String) -> void:
+	if holding_item:
+		# temp for testing
+		gui.display_text("This item doesn't work on this door...")
+		gui.drop_item()
+		holding_item = false
+		set_cursor_by_type(hovered_area_list.back())
+		return
+	
 	gui.transition_screen()
 	await gui.verify_tweened_node(gui.screen_fade)
 	load_room(destination)
 
-# this is temp for testing, will flesh out later
-func _on_item_clicked(text: String) -> void:
-	gui.display_description(text, 3.0)
+func _on_item_clicked(item: Item) -> void:
+	if holding_item:
+		# temp for testing
+		gui.display_text("These items can't combine...")
+		gui.drop_item()
+		holding_item = false
+		set_cursor_by_type(hovered_area_list.back())
+		return
+	
+	gui.hold_item(item)
+	holding_item = true
+	set_cursor("Item")

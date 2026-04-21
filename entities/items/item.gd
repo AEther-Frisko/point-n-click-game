@@ -38,7 +38,7 @@ func update_texture(new_texture = item_data.texture) -> void:
 func _on_input(event: InputEvent) -> void:
 	if event.is_action_pressed("click"):
 		get_viewport().set_input_as_handled()
-		clicked.emit("You are clicking an item")
+		clicked.emit(self)
 
 ## Triggered when the mouse hovers over the [Item].
 func _on_hover_start() -> void:

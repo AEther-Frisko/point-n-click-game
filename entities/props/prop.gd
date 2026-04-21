@@ -43,6 +43,5 @@ func update_texture(new_texture = prop_data.texture) -> void:
 func _on_clicked() -> void:
 	if prop_data.held_item:
 		clicked.emit(prop_data.held_item, self)
-		prop_data.held_item = null
 	else:
-		clicked.emit(prop_data.description)
+		clicked.emit(prop_data.description, self)
