@@ -2,8 +2,8 @@
 class_name Prop extends Interactable
 ## A type of [Interactable] for objects that appear in the game world.
 ##
-## Right now these are a sprite with a description, but later they will
-## be able to hold items and have states.
+## By default these will have a description and an appearance, but can also
+## hold an [Item] which the player can pick up.
 
 ## Data properties for the [Prop].
 @export var prop_data: PropData
@@ -42,7 +42,7 @@ func update_texture(new_texture = prop_data.texture) -> void:
 ## Triggered when the [Prop] is clicked.
 func _on_clicked() -> void:
 	if prop_data.held_item:
-		clicked.emit(prop_data.held_item)
+		clicked.emit(prop_data.held_item, self)
 		prop_data.held_item = null
 	else:
 		clicked.emit(prop_data.description)

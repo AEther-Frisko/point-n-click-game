@@ -6,7 +6,7 @@ extends Node
 ## what kind of [Interactable] is being hovered over.
 
 ## All [Interactable]s in the scene.
-@onready var interactables : Array[Node]
+@onready var interactable_list : Array[Node]
 
 ## The parent of all GUI ([Control]) elements.
 @onready var gui := %GUI
@@ -18,7 +18,7 @@ extends Node
 var current_room : Node2D
 
 ## All [Interactable]s currently being hovered over by the mouse.
-var hovered_areas : Array[Node]
+var hovered_area_list : Array[Node]
 
 ## Cursor [Texture] to load depending on the context.
 @export var cursors := {
@@ -35,87 +35,71 @@ func _ready() -> void:
 func _on_scene_ready() -> void:
 	update_interactables()
 
-## Cleans an array of any invalid data types (i.e. freed items), and
-## returns the cleaned array.
-func clean_array(dirty_array: Array[Node]) -> Array[Node]:
-	var cleaned_array : Array[Node]
-	for item in dirty_array:
-		if is_instance_valid(item):
-			cleaned_array.append(item)
-	return cleaned_array
-
-## Ensures any new [Interactable]s are added to [member interactables],
+## Ensures any new [Interactable]s are added to [member interactable_list],
 ## and ones that no longer exist are removed.
 func update_interactables() -> void:
-	interactables.clear()
+	interactable_list.clear()
 	# check for new [Interactable]s
 	var new_interactables = get_tree().get_nodes_in_group("interactables")
 	for interactable in new_interactables:
 		add_interactable(interactable)
 
-## Adds a new [Interactable] to [member interactables] and connects its signals.
+## Adds a new [Interactable] to [member interactable_list] and connects its signals.
 func add_interactable(interactable: Node) -> void:
-	interactables.append(interactable)
-	if interactable.hover_started.is_connected(add_hovered_area):
+	interactable_list.append(interactable)
+	if interactable.hover_started.is_connected(_on_hover_started):
 		return
-	interactable.hover_started.connect(add_hovered_area)
-	interactable.hover_ended.connect(remove_hovered_area)
+	interactable.hover_started.connect(_on_hover_started)
+	interactable.hover_ended.connect(_on_hover_ended)
 	
 	# type-dependent connections
-	var groups := interactable.get_groups()
-	if groups.has("props"):
+	if interactable is Prop:
 		interactable.clicked.connect(_on_prop_clicked)
-	elif groups.has("doors"):
+	elif interactable is Door:
 		interactable.clicked.connect(_on_door_clicked)
-	elif groups.has("items"):
+	elif interactable is Item:
 		interactable.clicked.connect(_on_item_clicked)
 
-## Removes an [Interactable] from [member interactables].
+## Removes an [Interactable] from [member interactable_list].
 func remove_interactable(interactable: Node) -> void:
-	interactables.erase(interactable)
+	interactable_list.erase(interactable)
 
-## Adds a new area [Node] to [member hovered_areas] and updates the cursor accordingly.
+## Adds a new area [Node] to [member hovered_area_list] and updates the cursor accordingly.
 func add_hovered_area(area: Node) -> void:
-	hovered_areas.append(area)
+	hovered_area_list.append(area)
 	set_cursor_by_type(area)
 
-## Removes an area [Node] from [member hovered_areas] and updates the cursor if necessary.
+## Removes an area [Node] from [member hovered_area_list] and updates the cursor if necessary.
 func remove_hovered_area(area: Node) -> void:
-	hovered_areas.erase(area)
-	if hovered_areas.is_empty():
+	hovered_area_list.erase(area)
+	if hovered_area_list.is_empty():
 		set_cursor("Default")
 		return
-	set_cursor_by_type(hovered_areas.back())
+	set_cursor_by_type(hovered_area_list.back())
 
 ## Sets the mouse cursor to a specified [member cursors].
 func set_cursor(new_cursor: String) -> void:
 	Input.set_custom_mouse_cursor(cursors[new_cursor])
 
 ## Sets the mouse cursor based on the speciied [Node]'s type/group.
-# TODO: Improve this? It feels very hacky.
+# TODO: Improve this? unsure about it still.
 func set_cursor_by_type(area: Node) -> void:
-	# special cases
-	match area.get_class():
-		"Button":
-			set_cursor("Use")
-		"PanelContainer":
-			set_cursor("Default")
-	
-	var groups := area.get_groups()
-	if groups.has("props"):
+	if area is Button or area is Item:
+		set_cursor("Use")
+	elif area is Prop:
 		if area.prop_data.held_item:
 			set_cursor("Use")
 		else:
 			set_cursor("Look")
-	elif groups.has("doors"):
+	elif area is Door:
 		set_cursor("Walk")
-	elif groups.has("items"):
-		set_cursor("Use")
+	else:
+		set_cursor("Default")
 
-## Clears tracked [member interactables] and [member hovered_areas].
+## Clears tracked [member interactable_list] and [member hovered_area_list].
 func reset_interactables() -> void:
-	interactables.clear()
-	hovered_areas.clear()
+	interactable_list.clear()
+	hovered_area_list.clear()
 	set_cursor("Default")
 
 # might move the room loading/unloading into a separate manager later
@@ -139,14 +123,28 @@ func load_room(destination: String) -> void:
 		current_room.ready.connect(_on_scene_ready)
 		world.add_child(current_room)
 
+func _on_hover_started(area: Node) -> void:
+	add_hovered_area(area)
+	if area is Item:
+		gui.display_description(area.item_data.item_name)
+
+func _on_hover_ended(area: Node) -> void:
+	remove_hovered_area(area)
+	if area is Item:
+		gui.hide_description()
+
 ## If the [Prop] has an item, that item is picked up. Otherwise,
 ## the [Item]'s description is displayed.
-func _on_prop_clicked(input) -> void:
+func _on_prop_clicked(input, prop: Prop = null) -> void:
 	if input is String:
-		gui.display_description(input)
+		gui.display_description(input, 3.0)
 	elif input is ItemData:
 		gui.add_item(input)
-		set_cursor("Look")
+		if prop.prop_data.is_item:
+			remove_hovered_area(prop)
+			prop.queue_free()
+		else:
+			set_cursor("Look")
 		await gui.item_added
 		update_interactables()
 
@@ -158,4 +156,4 @@ func _on_door_clicked(destination: String) -> void:
 
 # this is temp for testing, will flesh out later
 func _on_item_clicked(text: String) -> void:
-	gui.display_description(text)
+	gui.display_description(text, 3.0)

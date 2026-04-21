@@ -17,6 +17,7 @@ metadata/_custom_type_script = "uid://dvdndyww02s8t"
 
 [sub_resource type="Resource" id="Resource_q3wsx"]
 script = ExtResource("5_ic8iu")
+item_name = "Item 1"
 texture = ExtResource("5_wv86s")
 metadata/_custom_type_script = "uid://bjarm57wje3pb"
 
@@ -25,6 +26,7 @@ script = ExtResource("3_3rrti")
 description = "Grey cube..."
 texture = ExtResource("5_wv86s")
 held_item = SubResource("Resource_q3wsx")
+is_item = true
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwubf"]

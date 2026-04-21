@@ -18,6 +18,9 @@ extends Control
 ## Timer for certain fade effects.
 var fade_timer: Timer
 
+## Current active fade tween.
+var fade_tween: Tween = null
+
 ## Emitted when a tween finishes on a [CanvasItem].
 signal tween_finished(node: CanvasItem)
 
@@ -42,24 +45,29 @@ func _process(_delta: float) -> void:
 ## and the specified [param fade_color] (i.e. [constant Color.TRANSPARENT] makes the node fade out
 ## until it is invisible).
 func fade_node(node: CanvasItem, fade_color: Color, fade_duration: float) -> void:
-	var tween = get_tree().create_tween()
-	tween.finished.connect(_on_tween_finished.bind(node))
-	tween.tween_property(node, "modulate", fade_color, fade_duration)
+	if fade_tween:
+		fade_tween.kill()
+	fade_tween = get_tree().create_tween()
+	fade_tween.finished.connect(_on_tween_finished.bind(node))
+	fade_tween.tween_property(node, "modulate", fade_color, fade_duration)
 
 ## Indicates when a specified [CanvasItem] has finished its tween animation.
 func _on_tween_finished(node: CanvasItem) -> void:
 	tween_finished.emit(node)
 
-## Displays input description text to the screen for a limited time.
-func display_description(desc: String) -> void:
+## Displays input description text to the screen. If a show_time is included,
+## The text will automatically fade after that number of seconds.
+func display_description(desc: String, show_time: float = 0) -> void:
 	# display text
 	text_display.text = desc
 	fade_node(text_display, Color.WHITE, 0.25)
 	
-	fade_timer.start(3.0)
-	await fade_timer.timeout
-	
-	# hide text
+	if show_time > 0:
+		fade_timer.start(show_time)
+		await fade_timer.timeout
+		hide_description()
+
+func hide_description() -> void:
 	fade_node(text_display, Color.TRANSPARENT, 0.5)
 
 ## Fades screen to black, resets text display, then fades back
@@ -94,7 +102,10 @@ func add_item(item: ItemData) -> void:
 	
 	#tween animation to make preview move into inventory and then disappear
 	var tween = get_tree().create_tween()
-	tween.tween_property(item_preview, "position", inventory.button.position + (inventory.button.size / 2), 0.5)
+	var tween_goal = inventory.button.position + (inventory.button.size / 2)
+	var tween_distance = item_preview.position.distance_to(tween_goal)
+	var tween_time = tween_distance / 1200 # should I use this or a fixed time?
+	tween.tween_property(item_preview, "position", tween_goal, tween_time)
 	await tween.finished
 	item_preview.queue_free()
 	
