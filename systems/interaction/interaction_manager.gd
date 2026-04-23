@@ -14,13 +14,11 @@ extends Node
 ## The parent of all elements in the world ([Node2D]).
 @onready var world := %World
 
-## Currently loaded room scene.
-var current_room : Node2D
-
 ## All [Interactable]s currently being hovered over by the mouse.
 var hovered_area_list : Array[Node]
 
-var holding_item := false
+## Currently held [Item].
+var held_item: Item = null
 
 ## Cursor [Texture] to load depending on the context.
 @export var cursors := {
@@ -32,10 +30,11 @@ var holding_item := false
 }
 
 func _ready() -> void:
-	load_room("room")
 	get_tree().current_scene.ready.connect(_on_scene_ready)
+	world.room_loaded.connect(_on_scene_ready)
 
 func _on_scene_ready() -> void:
+	reset_interactables()
 	update_interactables()
 
 ## Ensures any new [Interactable]s are added to [member interactable_list],
@@ -76,10 +75,16 @@ func add_hovered_area(area: Node) -> void:
 func remove_hovered_area(area: Node) -> void:
 	hovered_area_list.erase(area)
 	if hovered_area_list.is_empty():
-		if not holding_item:
+		if not held_item:
 			set_cursor("Default")
 		return
 	set_cursor_by_type(hovered_area_list.back())
+
+## Clears tracked [member interactable_list] and [member hovered_area_list].
+func reset_interactables() -> void:
+	interactable_list.clear()
+	hovered_area_list.clear()
+	set_cursor("Default")
 
 ## Sets the mouse cursor to a specified [member cursors].
 func set_cursor(new_cursor: String) -> void:
@@ -88,7 +93,7 @@ func set_cursor(new_cursor: String) -> void:
 ## Sets the mouse cursor based on the speciied [Node]'s type/group.
 # TODO: Improve this? unsure about it still.
 func set_cursor_by_type(area: Node) -> void:
-	if holding_item:
+	if held_item:
 		set_cursor("Item")
 	elif area is Button or area is Item:
 		set_cursor("Use")
@@ -102,35 +107,9 @@ func set_cursor_by_type(area: Node) -> void:
 	else:
 		set_cursor("Default")
 
-## Clears tracked [member interactable_list] and [member hovered_area_list].
-func reset_interactables() -> void:
-	interactable_list.clear()
-	hovered_area_list.clear()
-	set_cursor("Default")
-
-# might move the room loading/unloading into a separate manager later
-# since it's not directly interaction-related
-## Unloads the [member current_room] from the [SceneTree].
-func unload_room() -> void:
-	if holding_item:
-		gui.drop_item()
-		holding_item = false
-	if is_instance_valid(current_room):
-		current_room.queue_free()
-	reset_interactables()
-	if gui.inventory:
-		gui.inventory.toggle_inventory(false)
-	current_room = null
-
-## Loads a new room [PackedScene] according to the specified destination [String].
-func load_room(destination: String) -> void:
-	unload_room()
-	var room_path := "res://entities/rooms/%s.tscn" % destination
-	var new_room = load(room_path)
-	if new_room:
-		current_room = new_room.instantiate()
-		current_room.ready.connect(_on_scene_ready)
-		world.add_child(current_room)
+func drop_held_item() -> void:
+	gui.drop_item(held_item)
+	held_item = null
 
 func _on_hover_started(area: Node) -> void:
 	add_hovered_area(area)
@@ -145,20 +124,19 @@ func _on_hover_ended(area: Node) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("click"):
 		return
-	if holding_item:
-		gui.drop_item()
-		holding_item = false
+	if held_item:
+		gui.drop_item(held_item)
+		held_item = null
 		set_cursor("Default")
 
 ## If the [Prop] has an item, that item is picked up. Otherwise,
 ## the [Item]'s description is displayed.
 func _on_prop_clicked(input, prop: Prop = null) -> void:
-	if holding_item:
+	if held_item:
 		# temp for testing
-		gui.display_text("Put item into this thing, I guess?", 3.0)
-		prop.prop_data.held_item = gui.held_item.item_data
-		gui.use_held_item()
-		holding_item = false
+		gui.display_text("Using " + str(held_item.item_data.item_name) + " on this??", 3.0)
+		gui.use_item(held_item)
+		held_item = null
 		set_cursor_by_type(hovered_area_list.back())
 		update_interactables()
 		return
@@ -178,27 +156,25 @@ func _on_prop_clicked(input, prop: Prop = null) -> void:
 
 ## Initiates a room transition according to the clicked [Door]'s destination.
 func _on_door_clicked(destination: String) -> void:
-	if holding_item:
+	if held_item:
 		# temp for testing
 		gui.display_text("This item doesn't work on this door...")
-		gui.drop_item()
-		holding_item = false
+		drop_held_item()
 		set_cursor_by_type(hovered_area_list.back())
 		return
 	
 	gui.transition_screen()
 	await gui.verify_tweened_node(gui.screen_fade)
-	load_room(destination)
+	world.load_room(destination)
 
 func _on_item_clicked(item: Item) -> void:
-	if holding_item:
+	if held_item:
 		# temp for testing
 		gui.display_text("These items can't combine...")
-		gui.drop_item()
-		holding_item = false
+		drop_held_item()
 		set_cursor_by_type(hovered_area_list.back())
 		return
 	
-	gui.hold_item(item)
-	holding_item = true
+	held_item = item
+	gui.hold_item(held_item)
 	set_cursor("Item")

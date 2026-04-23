@@ -33,9 +33,6 @@ signal hover_ended(node: Node)
 func _ready() -> void:
 	add_to_group("interactables")
 	toggle_inventory()
-	
-	# makes sure inventory is at least the size of [member base_slot_num], but
-	# still includes all items
 	update_inventory()
 	
 	inventory_display.mouse_entered.connect(_on_mouse_entered.bind(inventory_display))
@@ -44,7 +41,7 @@ func _ready() -> void:
 	button.mouse_exited.connect(_on_mouse_exited.bind(button))
 
 ## Adds a new [ItemSlot] to the inventory.
-func add_slot(item: ItemData = null) -> void:
+func add_slot(item_data: ItemData = null) -> void:
 	var slot_instance = item_slot.instantiate()
 	slot_list.append(slot_instance)
 	inventory_grid.add_child(slot_instance)
@@ -52,8 +49,8 @@ func add_slot(item: ItemData = null) -> void:
 	slot_instance.mouse_entered.connect(_on_mouse_entered.bind(slot_instance))
 	slot_instance.mouse_exited.connect(_on_mouse_exited.bind(slot_instance))
 	
-	if item:
-		slot_instance.item_data = item
+	if item_data:
+		slot_instance.item_data = item_data
 
 ## Removes an [ItemSlot] from the inventory.
 func remove_slot(slot: ItemSlot) -> void:
@@ -67,13 +64,13 @@ func clear_slots() -> void:
 	slot_list.clear()
 
 ## Adds a new [ItemData] to the [member item_list], and updates the inventory to match.
-func add_item(item: ItemData) -> void:
-	item_list.append(item)
+func add_item_data(item_data: ItemData) -> void:
+	item_list.append(item_data)
 	update_inventory()
 
 ## Removes an [ItemData] from the [member item_list] and updates the inventory to match.
-func remove_item(item: ItemData) -> void:
-	item_list.erase(item)
+func remove_item_data(item_data: ItemData) -> void:
+	item_list.erase(item_data)
 	update_inventory()
 
 ## Re-draws [ItemSlot]s to ensure all [ItemData] is correct.

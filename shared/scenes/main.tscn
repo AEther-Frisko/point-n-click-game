@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c3w4jva14www2" path="res://systems/ui/gui.gd" id="1_1nha7"]
 [ext_resource type="Script" uid="uid://bbsi6eaaa5bob" path="res://systems/interaction/interaction_manager.gd" id="1_n4xtn"]
 [ext_resource type="PackedScene" uid="uid://2lb4kqnd5vrx" path="res://systems/inventory/inventory.tscn" id="3_n4xtn"]
+[ext_resource type="Script" uid="uid://iow2kyt02g0p" path="res://shared/scripts/scene_manager.gd" id="4_m4i1k"]
 
 [node name="Main" type="Node" unique_id=1543907092]
 
@@ -65,3 +66,4 @@ color = Color(0, 0, 0, 1)
 
 [node name="World" type="Node2D" parent="." unique_id=931716194]
 unique_name_in_owner = true
+script = ExtResource("4_m4i1k")
