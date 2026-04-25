@@ -1,9 +1,6 @@
 @tool # allows sprites and collision shapes to show up in the editor
 class_name Prop extends Interactable
 ## A type of [Interactable] for objects that appear in the game world.
-##
-## By default these will have a description and an appearance, but can also
-## hold an [Item] which the player can pick up.
 
 ## Data properties for the [Prop].
 @export var prop_data: PropData
@@ -14,7 +11,6 @@ class_name Prop extends Interactable
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		super._ready()
-	add_to_group("props")
 	
 	if not prop_data:
 		return
@@ -42,6 +38,9 @@ func update_texture(new_texture = prop_data.texture) -> void:
 ## Triggered when the [Prop] is clicked.
 func _on_clicked() -> void:
 	if prop_data.held_item:
-		clicked.emit(prop_data.held_item, self)
+		current_interaction = GetItemStrategy.new()
+		current_interaction.item_data = prop_data.held_item
 	else:
-		clicked.emit(prop_data.description, self)
+		current_interaction = ExamineStrategy.new()
+		current_interaction.description = prop_data.description
+	super._on_clicked()

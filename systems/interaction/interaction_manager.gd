@@ -1,18 +1,18 @@
-extends Node
+class_name InteractionManager extends Node
 ## The main manager for all [Interactable]s in the game.
 ##
 ## Keeps track of [Interactable]s in the scene and manages how their interactions
 ## should affect the game. For example, changing the mouse cursor depending on
 ## what kind of [Interactable] is being hovered over.
 
-## All [Interactable]s in the scene.
-@onready var interactable_list : Array[Node]
-
 ## The parent of all GUI ([Control]) elements.
-@onready var gui := %GUI
+@onready var gui : GuiManager = %GUI
 
 ## The parent of all elements in the world ([Node2D]).
-@onready var world := %World
+@onready var world : SceneManager = %World
+
+## All [Interactable]s in the scene.
+@onready var interactable_list : Array[Node]
 
 ## All [Interactable]s currently being hovered over by the mouse.
 var hovered_area_list : Array[Node]
@@ -53,14 +53,8 @@ func add_interactable(interactable: Node) -> void:
 		return
 	interactable.hover_started.connect(_on_hover_started)
 	interactable.hover_ended.connect(_on_hover_ended)
-	
-	# type-dependent connections
-	if interactable is Prop:
-		interactable.clicked.connect(_on_prop_clicked)
-	elif interactable is Door:
-		interactable.clicked.connect(_on_door_clicked)
-	elif interactable is Item:
-		interactable.clicked.connect(_on_item_clicked)
+	if interactable is Interactable: # to skip over inventory
+		interactable.clicked.connect(_on_clicked)
 
 ## Removes an [Interactable] from [member interactable_list].
 func remove_interactable(interactable: Node) -> void:
@@ -74,11 +68,7 @@ func add_hovered_area(area: Node) -> void:
 ## Removes an area [Node] from [member hovered_area_list] and updates the cursor if necessary.
 func remove_hovered_area(area: Node) -> void:
 	hovered_area_list.erase(area)
-	if hovered_area_list.is_empty():
-		if not held_item:
-			set_cursor("Default")
-		return
-	set_cursor_by_type(hovered_area_list.back())
+	update_cursor()
 
 ## Clears tracked [member interactable_list] and [member hovered_area_list].
 func reset_interactables() -> void:
@@ -107,9 +97,12 @@ func set_cursor_by_type(area: Node) -> void:
 	else:
 		set_cursor("Default")
 
-func drop_held_item() -> void:
-	gui.drop_item(held_item)
-	held_item = null
+func update_cursor() -> void:
+	if hovered_area_list.is_empty():
+		if not held_item:
+			set_cursor("Default")
+		return
+	set_cursor_by_type(hovered_area_list.back())
 
 func _on_hover_started(area: Node) -> void:
 	add_hovered_area(area)
@@ -121,60 +114,32 @@ func _on_hover_ended(area: Node) -> void:
 	if area is Item:
 		gui.hide_text()
 
+func create_context() -> InteractionContext:
+	var context = InteractionContext.new()
+	context.manager = self
+	context.gui = gui
+	context.world = world
+	return context
+
+func _on_clicked(interactable: Interactable) -> void:
+	if held_item: # temp until i set up action-switching better
+		drop_held_item()
+		update_cursor()
+	elif interactable.current_interaction:
+		var context = create_context()
+		context.interactable = interactable
+		interactable.current_interaction.interact(context)
+		update_cursor()
+	else:
+		push_warning(interactable, " does not have an interaction attached.")
+
+func drop_held_item() -> void:
+	gui.drop_item(held_item)
+	held_item = null
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("click"):
 		return
 	if held_item:
-		gui.drop_item(held_item)
-		held_item = null
+		drop_held_item()
 		set_cursor("Default")
-
-## If the [Prop] has an item, that item is picked up. Otherwise,
-## the [Item]'s description is displayed.
-func _on_prop_clicked(input, prop: Prop = null) -> void:
-	if held_item:
-		# temp for testing
-		gui.display_text("Using " + str(held_item.item_data.item_name) + " on this??", 3.0)
-		gui.use_item(held_item)
-		held_item = null
-		set_cursor_by_type(hovered_area_list.back())
-		update_interactables()
-		return
-	
-	if input is String:
-		gui.display_text(input, 3.0)
-	elif input is ItemData:
-		gui.add_item(input)
-		prop.prop_data.held_item = null
-		if prop.prop_data.is_item:
-			remove_hovered_area(prop)
-			prop.queue_free()
-		else:
-			set_cursor("Look")
-		await gui.item_added
-		update_interactables()
-
-## Initiates a room transition according to the clicked [Door]'s destination.
-func _on_door_clicked(destination: String) -> void:
-	if held_item:
-		# temp for testing
-		gui.display_text("This item doesn't work on this door...")
-		drop_held_item()
-		set_cursor_by_type(hovered_area_list.back())
-		return
-	
-	gui.transition_screen()
-	await gui.verify_tweened_node(gui.screen_fade)
-	world.load_room(destination)
-
-func _on_item_clicked(item: Item) -> void:
-	if held_item:
-		# temp for testing
-		gui.display_text("These items can't combine...")
-		drop_held_item()
-		set_cursor_by_type(hovered_area_list.back())
-		return
-	
-	held_item = item
-	gui.hold_item(held_item)
-	set_cursor("Item")

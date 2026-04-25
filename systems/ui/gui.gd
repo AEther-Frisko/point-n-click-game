@@ -1,4 +1,4 @@
-extends Control
+class_name GuiManager extends Control
 ## The main controller for all GUI functionality.
 ##
 ## Manages visual changes such as displaying text to the screen, and screen transitions.

@@ -1,4 +1,4 @@
-extends Node2D
+class_name SceneManager extends Node2D
 
 ## Currently loaded room scene.
 var current_room : Node2D

@@ -16,7 +16,6 @@ class_name Item extends Interactable
 
 func _ready() -> void:
 	add_to_group("interactables")
-	add_to_group("items")
 	
 	if not texture_rect:
 		texture_rect = TextureRect.new()
@@ -25,6 +24,8 @@ func _ready() -> void:
 		item_data = ItemData.new()
 	item_data.texture_changed.connect(update_texture)
 	update_texture()
+	
+	current_interaction = HoldItemStrategy.new()
 	
 	area_container.mouse_entered.connect(_on_hover_start)
 	area_container.mouse_exited.connect(_on_hover_end)
