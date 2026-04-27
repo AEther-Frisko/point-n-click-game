@@ -1,4 +1,6 @@
 class_name InteractionContext extends RefCounted
+## Provides an [InteractionStrategy] with necessary references and functions
+## to perform various actions.
 
 var manager: InteractionManager
 var gui: GuiManager

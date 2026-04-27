@@ -12,7 +12,11 @@ class_name Item extends Interactable
 @onready var area_container: Control = $AreaContainer
 
 ## Data properties for the [Item].
-@export var item_data: ItemData
+@export var item_data: ItemData:
+	set(new_data):
+		item_data = new_data
+		if new_data.texture:
+			update_texture(new_data.texture)
 
 func _ready() -> void:
 	add_to_group("interactables")
@@ -22,8 +26,8 @@ func _ready() -> void:
 		add_child(texture_rect)
 	if not item_data:
 		item_data = ItemData.new()
-	item_data.texture_changed.connect(update_texture)
-	update_texture()
+	
+	item_data.texture_changed.connect(update_texture.bind(item_data.texture))
 	
 	current_interaction = HoldItemStrategy.new()
 	
@@ -32,7 +36,7 @@ func _ready() -> void:
 	area_container.gui_input.connect(_on_input)
 
 ## Updates the [member texture_rect]'s [Texture2D] to match the current [ItemData].
-func update_texture(new_texture = item_data.texture) -> void:
+func update_texture(new_texture: Texture2D) -> void:
 	texture_rect.texture = new_texture
 
 ## Triggered when the [Item] detects user input, but only cares about mouse clicks.

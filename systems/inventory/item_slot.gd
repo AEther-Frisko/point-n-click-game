@@ -30,7 +30,7 @@ func remove_item() -> void:
 
 ## Adds a new [Item] to the [ItemSlot] and populates it with the slot's held [ItemData].
 func add_item() -> void:
-	remove_item()
-	current_item = item_scene.instantiate()
+	if not is_instance_valid(current_item):
+		current_item = item_scene.instantiate()
+		add_child(current_item)
 	current_item.item_data = item_data
-	add_child(current_item)

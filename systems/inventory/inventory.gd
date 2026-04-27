@@ -33,7 +33,7 @@ signal hover_ended(node: Node)
 func _ready() -> void:
 	add_to_group("interactables")
 	toggle_inventory()
-	update_inventory()
+	reset_inventory()
 	
 	inventory_display.mouse_entered.connect(_on_mouse_entered.bind(inventory_display))
 	inventory_display.mouse_exited.connect(_on_mouse_exited.bind(inventory_display))
@@ -73,14 +73,25 @@ func remove_item_data(item_data: ItemData) -> void:
 	item_list.erase(item_data)
 	update_inventory()
 
-## Re-draws [ItemSlot]s to ensure all [ItemData] is correct.
+## Updates indentory without removing existing [ItemData].
 func update_inventory() -> void:
+	for item_index in max(slot_list.size(), item_list.size()):
+		if item_list.size() > item_index:
+			update_slot_data(slot_list[item_index], item_list[item_index])
+		else:
+			update_slot_data(slot_list[item_index])
+
+## Re-draws [ItemSlot]s to ensure all [ItemData] is correct.
+func reset_inventory() -> void:
 	clear_slots()
 	for item_index in max(base_slot_num, item_list.size()):
 		if item_list.size() > item_index:
 			add_slot(item_list[item_index])
 		else:
 			add_slot()
+
+func update_slot_data(slot: ItemSlot, item_data: ItemData = null) -> void:
+	slot.item_data = item_data
 
 ## Hide an [Item] without actually removing it from the [ItemSlot].
 func hide_item(item: Item) -> void:
