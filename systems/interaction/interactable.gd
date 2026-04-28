@@ -4,7 +4,8 @@ class_name Interactable extends CanvasItem
 ## Uses a [ClickableArea] to recieve mouse hovering and clicks,
 ## and sends out signals depending on what is recieved.
 
-@export var current_interaction: InteractionStrategy
+## Possible Interactions this can perform.
+@export var interaction_list: Array[InteractionStrategy]
 
 ## Emitted when the attached [ClickableArea] is clicked on.
 signal clicked()
@@ -30,6 +31,16 @@ func _ready() -> void:
 	clickable_area.clicked.connect(_on_clicked)
 	clickable_area.mouse_entered.connect(_on_hover_start)
 	clickable_area.mouse_exited.connect(_on_hover_end)
+
+func create_interactions() -> void:
+	pass
+
+func get_valid_interactions(context: InteractionContext) -> Array[InteractionStrategy]:
+	var result: Array[InteractionStrategy]
+	for interaction in interaction_list:
+		if interaction.can_interact(context):
+			result.append(interaction)
+	return result
 
 ## Indicates that this [Interactable] has been clicked.
 func _on_clicked() -> void:

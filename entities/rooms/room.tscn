@@ -6,8 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://boau6tul4tt8g" path="res://entities/props/test_prop_1.png" id="4_wv86s"]
 [ext_resource type="Script" uid="uid://bjarm57wje3pb" path="res://entities/items/item_data.gd" id="5_ic8iu"]
 [ext_resource type="Script" uid="uid://cqfj6wrx4rg80" path="res://systems/interaction/strategies/examine_strategy.gd" id="5_q3wsx"]
+[ext_resource type="Script" uid="uid://dq8a57b1tj3bl" path="res://systems/interaction/strategies/interaction_strategy.gd" id="5_w4bvw"]
 [ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="5_wv86s"]
 [ext_resource type="Script" uid="uid://dapxy6n44rykv" path="res://entities/doors/door.gd" id="6_pl5rr"]
+[ext_resource type="Script" uid="uid://bvck6qm3mlmqp" path="res://systems/interaction/strategies/get_item_strategy.gd" id="7_26pwu"]
 [ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="7_bwubf"]
 
 [sub_resource type="Resource" id="Resource_pl5rr"]
@@ -16,9 +18,12 @@ description = "A strange table."
 texture = ExtResource("4_wv86s")
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
 
-[sub_resource type="Resource" id="Resource_se4uc"]
+[sub_resource type="Resource" id="Resource_goa68"]
 script = ExtResource("5_q3wsx")
 description = "A strange table."
+
+[sub_resource type="Resource" id="Resource_ujybf"]
+script = ExtResource("7_26pwu")
 
 [sub_resource type="Resource" id="Resource_q3wsx"]
 script = ExtResource("5_ic8iu")
@@ -48,7 +53,7 @@ texture = ExtResource("1_4jni1")
 [node name="Prop" parent="Props" unique_id=1491848127 instance=ExtResource("1_gfcs5")]
 position = Vector2(297, 875)
 prop_data = SubResource("Resource_pl5rr")
-current_interaction = SubResource("Resource_se4uc")
+interaction_list = Array[ExtResource("5_w4bvw")]([SubResource("Resource_goa68"), SubResource("Resource_ujybf")])
 
 [node name="Prop2" parent="Props" unique_id=1237188023 instance=ExtResource("1_gfcs5")]
 position = Vector2(324, 704)

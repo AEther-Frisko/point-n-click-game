@@ -26,14 +26,18 @@ func _ready() -> void:
 		add_child(texture_rect)
 	if not item_data:
 		item_data = ItemData.new()
-	
 	item_data.texture_changed.connect(update_texture.bind(item_data.texture))
 	
-	current_interaction = HoldItemStrategy.new()
+	create_interactions()
 	
 	area_container.mouse_entered.connect(_on_hover_start)
 	area_container.mouse_exited.connect(_on_hover_end)
 	area_container.gui_input.connect(_on_input)
+
+func create_interactions() -> void:
+	if not interaction_list.is_empty():
+		return # allows overriding of default interactions
+	interaction_list.append(HoldItemStrategy.new())
 
 ## Updates the [member texture_rect]'s [Texture2D] to match the current [ItemData].
 func update_texture(new_texture: Texture2D) -> void:

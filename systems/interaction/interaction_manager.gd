@@ -20,15 +20,6 @@ var hovered_area_list : Array[Node]
 ## Currently held [Item].
 var held_item: Item = null
 
-## Cursor [Texture] to load depending on the context.
-@export var cursors := {
-	"Default" : preload("res://shared/images/cursors/cur_default.png"),
-	"Look" : preload("res://shared/images/cursors/cur_look.png"),
-	"Walk" : preload("res://shared/images/cursors/cur_walk.png"),
-	"Use" : preload("res://shared/images/cursors/cur_hand.png"),
-	"Item" : preload("res://shared/images/cursors/cur_item.png")
-}
-
 func _ready() -> void:
 	get_tree().current_scene.ready.connect(_on_scene_ready)
 	world.room_loaded.connect(_on_scene_ready)
@@ -36,6 +27,7 @@ func _ready() -> void:
 func _on_scene_ready() -> void:
 	reset_interactables()
 	update_interactables()
+	add_interactable(gui.inventory)
 
 ## Ensures any new [Interactable]s are added to [member interactable_list],
 ## and ones that no longer exist are removed.
@@ -53,19 +45,24 @@ func add_interactable(interactable: Node) -> void:
 		return
 	interactable.hover_started.connect(_on_hover_started)
 	interactable.hover_ended.connect(_on_hover_ended)
-	if interactable is Interactable: # to skip over inventory
+	if interactable is Interactable: # skips inventory
 		interactable.clicked.connect(_on_clicked)
 
 ## Removes an [Interactable] from [member interactable_list].
 func remove_interactable(interactable: Node) -> void:
 	interactable_list.erase(interactable)
 
-## Adds a new area [Node] to [member hovered_area_list] and updates the cursor accordingly.
+## Adds a new area [Node] to [member hovered_area_list]
+## and updates the cursor to match.
 func add_hovered_area(area: Node) -> void:
 	hovered_area_list.append(area)
-	set_cursor_by_type(area)
+	if area is Button: # might change this later it's a bit hacky
+		Input.set_custom_mouse_cursor(Verbs.take.cursor)
+		return
+	update_cursor()
 
-## Removes an area [Node] from [member hovered_area_list] and updates the cursor if necessary.
+## Removes an area [Node] from [member hovered_area_list]
+## and updates the cursor to match.
 func remove_hovered_area(area: Node) -> void:
 	hovered_area_list.erase(area)
 	update_cursor()
@@ -74,35 +71,32 @@ func remove_hovered_area(area: Node) -> void:
 func reset_interactables() -> void:
 	interactable_list.clear()
 	hovered_area_list.clear()
-	set_cursor("Default")
+	update_cursor()
 
-## Sets the mouse cursor to a specified [member cursors].
-func set_cursor(new_cursor: String) -> void:
-	Input.set_custom_mouse_cursor(cursors[new_cursor])
-
-## Sets the mouse cursor based on the speciied [Node]'s type/group.
-# TODO: Improve this? unsure about it still.
-func set_cursor_by_type(area: Node) -> void:
-	if held_item:
-		set_cursor("Item")
-	elif area is Button or area is Item:
-		set_cursor("Use")
-	elif area is Prop:
-		if area.prop_data.held_item:
-			set_cursor("Use")
-		else:
-			set_cursor("Look")
-	elif area is Door:
-		set_cursor("Walk")
-	else:
-		set_cursor("Default")
-
+## Updates the mouse cursor's appearance based on game state.
 func update_cursor() -> void:
-	if hovered_area_list.is_empty():
-		if not held_item:
-			set_cursor("Default")
+	if held_item:
+		Input.set_custom_mouse_cursor(Verbs.hold_item.cursor)
 		return
-	set_cursor_by_type(hovered_area_list.back())
+	
+	if hovered_area_list.is_empty():
+		Input.set_custom_mouse_cursor(Verbs.default.cursor)
+		return
+	
+	if hovered_area_list.back() is Interactable:
+		set_cursor_by_verb(hovered_area_list.back())
+	else:
+		Input.set_custom_mouse_cursor(Verbs.default.cursor)
+
+## Sets the mouse cursor based on the specified [Interactable]'s [Verb].
+func set_cursor_by_verb(area: Interactable) -> void:
+	var context = create_context(area)
+	var valid_list = area.get_valid_interactions(context)
+	var best = choose_best_interaction(valid_list)
+	if best:
+		Input.set_custom_mouse_cursor(best.verb.cursor)
+	else:
+		Input.set_custom_mouse_cursor(Verbs.default.cursor)
 
 func _on_hover_started(area: Node) -> void:
 	add_hovered_area(area)
@@ -114,24 +108,40 @@ func _on_hover_ended(area: Node) -> void:
 	if area is Item:
 		gui.hide_text()
 
-func create_context() -> InteractionContext:
+## Creates an [InteractionContext] for an [Interactable] to make use of.
+func create_context(interactable: Interactable) -> InteractionContext:
 	var context = InteractionContext.new()
 	context.manager = self
 	context.gui = gui
 	context.world = world
+	context.interactable = interactable
 	return context
+
+## Sorts the input [InteractionStrategy] [Array] by the priority level of each.
+## Returns the highest priority option.
+func choose_best_interaction(interaction_list: Array[InteractionStrategy]) -> InteractionStrategy:
+	if interaction_list.is_empty():
+		return null
+	
+	interaction_list.sort_custom(
+		func(a,b):
+			return a.verb.priority > b.verb.priority
+	)
+	return interaction_list.front()
 
 func _on_clicked(interactable: Interactable) -> void:
 	if held_item: # temp until i set up action-switching better
 		drop_held_item()
 		update_cursor()
-	elif interactable.current_interaction:
-		var context = create_context()
-		context.interactable = interactable
-		interactable.current_interaction.interact(context)
+	elif not interactable.interaction_list.is_empty():
+		var context = create_context(interactable)
+		var valid_list = interactable.get_valid_interactions(context)
+		var best = choose_best_interaction(valid_list)
+		if best:
+			best.interact(context)
 		update_cursor()
 	else:
-		push_warning(interactable, " does not have an interaction attached.")
+		push_warning(interactable, " does not have any interactions attached.")
 
 func drop_held_item() -> void:
 	gui.drop_item(held_item)
@@ -142,4 +152,4 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if held_item:
 		drop_held_item()
-		set_cursor("Default")
+		update_cursor()

@@ -11,5 +11,8 @@ class_name Door extends Interactable
 
 func _ready() -> void:
 	super._ready()
-	current_interaction = LoadRoomStrategy.new()
-	current_interaction.destination = destination
+	create_interactions()
+
+func create_interactions() -> void:
+	interaction_list.append(LoadRoomStrategy.new())
+	interaction_list[0].destination = destination

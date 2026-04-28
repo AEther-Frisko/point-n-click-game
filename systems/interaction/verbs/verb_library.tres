@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="VerbLibrary" format=3 uid="uid://bqkadmk50sfwj"]
+
+[ext_resource type="Resource" uid="uid://cmsk3w8qfktoe" path="res://systems/interaction/verbs/hold_item_verb.tres" id="1_hlhft"]
+[ext_resource type="Resource" uid="uid://cbxmutdtumoo6" path="res://systems/interaction/verbs/default_verb.tres" id="1_i75ae"]
+[ext_resource type="Script" uid="uid://b03jg22fftb7u" path="res://systems/interaction/verbs/verb_library.gd" id="1_wh6ku"]
+[ext_resource type="Resource" uid="uid://daamjot5g6ce" path="res://systems/interaction/verbs/look_verb.tres" id="2_i75ae"]
+[ext_resource type="Resource" uid="uid://bdghpx0rr033y" path="res://systems/interaction/verbs/take_verb.tres" id="4_tetxh"]
+[ext_resource type="Resource" uid="uid://cxf2oihst8upi" path="res://systems/interaction/verbs/walk_verb.tres" id="5_p2oep"]
+
+[resource]
+script = ExtResource("1_wh6ku")
+default = ExtResource("1_i75ae")
+look = ExtResource("2_i75ae")
+take = ExtResource("4_tetxh")
+walk = ExtResource("5_p2oep")
+hold_item = ExtResource("1_hlhft")
+metadata/_custom_type_script = "uid://b03jg22fftb7u"

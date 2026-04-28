@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Verb" format=3 uid="uid://cbxmutdtumoo6"]
+
+[ext_resource type="Texture2D" uid="uid://btv55fqew52av" path="res://shared/images/cursors/cur_default.png" id="1_iyb64"]
+[ext_resource type="Script" uid="uid://cl858fhijfpxa" path="res://systems/interaction/verbs/verb.gd" id="2_m8sfo"]
+
+[resource]
+script = ExtResource("2_m8sfo")
+name = "Default"
+cursor = ExtResource("1_iyb64")
+metadata/_custom_type_script = "uid://cl858fhijfpxa"

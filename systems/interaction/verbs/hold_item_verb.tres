@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Verb" format=3 uid="uid://cmsk3w8qfktoe"]
+
+[ext_resource type="Script" uid="uid://cl858fhijfpxa" path="res://systems/interaction/verbs/verb.gd" id="1_ihus2"]
+[ext_resource type="Texture2D" uid="uid://cierr3y7ihloo" path="res://shared/images/cursors/cur_item.png" id="1_ribd2"]
+
+[resource]
+script = ExtResource("1_ihus2")
+name = "Hold Item"
+cursor = ExtResource("1_ribd2")
+priority = 5
+metadata/_custom_type_script = "uid://cl858fhijfpxa"

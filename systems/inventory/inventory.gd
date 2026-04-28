@@ -31,7 +31,6 @@ signal hover_started(node: Node)
 signal hover_ended(node: Node)
 
 func _ready() -> void:
-	add_to_group("interactables")
 	toggle_inventory()
 	reset_inventory()
 	
@@ -77,7 +76,10 @@ func remove_item_data(item_data: ItemData) -> void:
 func update_inventory() -> void:
 	for item_index in max(slot_list.size(), item_list.size()):
 		if item_list.size() > item_index:
-			update_slot_data(slot_list[item_index], item_list[item_index])
+			if slot_list.size() <= item_index:
+				add_slot(item_list[item_index])
+			else:
+				update_slot_data(slot_list[item_index], item_list[item_index])
 		else:
 			update_slot_data(slot_list[item_index])
 

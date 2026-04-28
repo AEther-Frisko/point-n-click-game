@@ -19,8 +19,19 @@ func _ready() -> void:
 		sprite = Sprite2D.new()
 		add_child(sprite)
 	
+	create_interactions()
+	
 	prop_data.texture_changed.connect(update_texture)
 	update_texture()
+
+func create_interactions() -> void:
+	if not interaction_list.is_empty():
+		return # allows overriding of default interactions
+	interaction_list.append(ExamineStrategy.new())
+	interaction_list[0].description = prop_data.description
+	
+	interaction_list.append(GetItemStrategy.new())
+	interaction_list[1].item_data = prop_data.held_item
 
 ## Updates the [member sprite]'s [Texture2D] to match the current [PropData].
 func update_texture(new_texture = prop_data.texture) -> void:
@@ -34,13 +45,3 @@ func update_texture(new_texture = prop_data.texture) -> void:
 	texture_size = texture_size * sprite.scale
 	var collision_shape := get_node("ClickableArea/CollisionShape2D")
 	collision_shape.shape.size = texture_size
-
-## Triggered when the [Prop] is clicked.
-func _on_clicked() -> void:
-	if prop_data.held_item:
-		current_interaction = GetItemStrategy.new()
-		current_interaction.item_data = prop_data.held_item
-	else:
-		current_interaction = ExamineStrategy.new()
-		current_interaction.description = prop_data.description
-	super._on_clicked()
