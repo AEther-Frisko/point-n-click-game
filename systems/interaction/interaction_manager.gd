@@ -130,10 +130,7 @@ func choose_best_interaction(interaction_list: Array[InteractionStrategy]) -> In
 	return interaction_list.front()
 
 func _on_clicked(interactable: Interactable) -> void:
-	if held_item: # temp until i set up action-switching better
-		drop_held_item()
-		update_cursor()
-	elif not interactable.interaction_list.is_empty():
+	if not interactable.interaction_list.is_empty():
 		var context = create_context(interactable)
 		var valid_list = interactable.get_valid_interactions(context)
 		var best = choose_best_interaction(valid_list)

@@ -32,6 +32,7 @@ func _ready() -> void:
 	clickable_area.mouse_entered.connect(_on_hover_start)
 	clickable_area.mouse_exited.connect(_on_hover_end)
 
+## Creates default [InteractionStrategy] [Array] that can be overwritten.
 func create_interactions() -> void:
 	pass
 

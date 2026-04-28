@@ -25,13 +25,14 @@ func _ready() -> void:
 	update_texture()
 
 func create_interactions() -> void:
-	if not interaction_list.is_empty():
-		return # allows overriding of default interactions
-	interaction_list.append(ExamineStrategy.new())
-	interaction_list[0].description = prop_data.description
-	
-	interaction_list.append(GetItemStrategy.new())
-	interaction_list[1].item_data = prop_data.held_item
+	if interaction_list.is_empty():
+		interaction_list.append(ExamineStrategy.new())
+		interaction_list.back().description = prop_data.description
+		
+		interaction_list.append(GetItemStrategy.new())
+		interaction_list.back().item_data = prop_data.held_item
+		
+		interaction_list.append(UseItemStrategy.new())
 
 ## Updates the [member sprite]'s [Texture2D] to match the current [PropData].
 func update_texture(new_texture = prop_data.texture) -> void:

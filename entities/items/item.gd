@@ -35,9 +35,9 @@ func _ready() -> void:
 	area_container.gui_input.connect(_on_input)
 
 func create_interactions() -> void:
-	if not interaction_list.is_empty():
-		return # allows overriding of default interactions
-	interaction_list.append(HoldItemStrategy.new())
+	if interaction_list.is_empty():
+		interaction_list.append(HoldItemStrategy.new())
+		interaction_list.append(UseItemStrategy.new())
 
 ## Updates the [member texture_rect]'s [Texture2D] to match the current [ItemData].
 func update_texture(new_texture: Texture2D) -> void:

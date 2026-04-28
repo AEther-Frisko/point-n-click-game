@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Verb" format=3 uid="uid://2jgo87vgt1kd"]
+
+[ext_resource type="Script" uid="uid://cl858fhijfpxa" path="res://systems/interaction/verbs/verb.gd" id="1_3qub2"]
+[ext_resource type="Texture2D" uid="uid://dnf5a4u63xwoe" path="res://shared/images/cursors/cur_hand.png" id="1_p68xp"]
+
+[resource]
+script = ExtResource("1_3qub2")
+name = "Use"
+cursor = ExtResource("1_p68xp")
+priority = 4
+metadata/_custom_type_script = "uid://cl858fhijfpxa"

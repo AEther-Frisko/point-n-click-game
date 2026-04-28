@@ -17,3 +17,6 @@ var walk: Verb:
 
 var hold_item: Verb:
 	get: return LIBRARY.hold_item
+
+var use: Verb:
+	get: return LIBRARY.use

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://0tw3n1hkhdvt"]
+
+[ext_resource type="Script" uid="uid://bjarm57wje3pb" path="res://entities/items/item_data.gd" id="1_um65f"]
+[ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="2_cs70a"]
+
+[resource]
+script = ExtResource("1_um65f")
+item_name = "Cube Key"
+texture = ExtResource("2_cs70a")
+metadata/_custom_type_script = "uid://bjarm57wje3pb"

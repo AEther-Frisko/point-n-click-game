@@ -6,6 +6,7 @@
 [ext_resource type="Resource" uid="uid://daamjot5g6ce" path="res://systems/interaction/verbs/look_verb.tres" id="2_i75ae"]
 [ext_resource type="Resource" uid="uid://bdghpx0rr033y" path="res://systems/interaction/verbs/take_verb.tres" id="4_tetxh"]
 [ext_resource type="Resource" uid="uid://cxf2oihst8upi" path="res://systems/interaction/verbs/walk_verb.tres" id="5_p2oep"]
+[ext_resource type="Resource" uid="uid://2jgo87vgt1kd" path="res://systems/interaction/verbs/use_verb.tres" id="6_tetxh"]
 
 [resource]
 script = ExtResource("1_wh6ku")
@@ -14,4 +15,5 @@ look = ExtResource("2_i75ae")
 take = ExtResource("4_tetxh")
 walk = ExtResource("5_p2oep")
 hold_item = ExtResource("1_hlhft")
+use = ExtResource("6_tetxh")
 metadata/_custom_type_script = "uid://b03jg22fftb7u"

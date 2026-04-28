@@ -9,10 +9,21 @@ class_name Door extends Interactable
 ## "[b]room[/b]" loads "res://entities/rooms/[b]room[/b].tscn".
 @export var destination : String
 
+@export var is_locked := false
+@export var expected_item : ItemData
+
 func _ready() -> void:
 	super._ready()
 	create_interactions()
 
 func create_interactions() -> void:
-	interaction_list.append(LoadRoomStrategy.new())
-	interaction_list[0].destination = destination
+	if interaction_list.is_empty():
+		interaction_list.append(LoadRoomStrategy.new())
+		interaction_list.back().destination = destination
+		
+		interaction_list.append(ExamineStrategy.new())
+		interaction_list.back().description = "It's locked."
+		
+		interaction_list.append(UseItemStrategy.new())
+		interaction_list.back().expected_item = expected_item
+		interaction_list.back().success = UnlockDoorStrategy.new()

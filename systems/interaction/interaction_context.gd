@@ -29,6 +29,22 @@ func hold_item() -> void:
 		manager.held_item = interactable
 		gui.hold_item(manager.held_item)
 
+func is_holding_item() -> bool:
+	return is_instance_valid(manager.held_item)
+
+func get_held_item_data() -> ItemData:
+	if not is_holding_item():
+		return null
+	return manager.held_item.item_data
+
+func drop_held_item() -> void:
+	gui.drop_item(manager.held_item)
+	manager.held_item = null
+
+func use_held_item() -> void:
+	gui.use_item(manager.held_item)
+	manager.held_item = null
+
 func remove_interactable() -> void:
 	manager.remove_hovered_area(interactable)
 	interactable.queue_free()

@@ -6,3 +6,4 @@ class_name VerbLibrary extends Resource
 @export var take: Verb
 @export var walk: Verb
 @export var hold_item: Verb
+@export var use: Verb
