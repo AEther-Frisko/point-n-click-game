@@ -16,7 +16,11 @@ func can_interact(context: InteractionContext) -> bool:
 	return context.is_holding_item()
 
 func interact(context: InteractionContext) -> void:
-	if expected_item == context.get_held_item_data():
+	var key = expected_item
+	if not key:
+		key = context.get_key_item()
+	
+	if key == context.get_held_item_data():
 		context.use_held_item()
 		success.interact(context)
 	else:

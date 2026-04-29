@@ -129,7 +129,7 @@ func hold_item(item: Item) -> void:
 
 ## Visual changes to show the held [Item] has been dropped and returned to the inventory.
 func drop_item(item: Item) -> void:
-	await tween_item_to_inventory(held_item_preview)
+	held_item_preview.queue_free()
 	inventory.show_item(item)
 
 ## Removes the held [Item] from the inventory and the visual item preview. 

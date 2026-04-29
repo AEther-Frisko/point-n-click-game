@@ -19,9 +19,9 @@ func add_item(item_data: ItemData) -> void:
 	manager.update_interactables()
 
 func take_item() -> void:
-	if interactable is Prop:
-		interactable.prop_data.held_item = null
-		if interactable.prop_data.is_item:
+	if interactable.container_data:
+		interactable.container_data.held_item = null
+		if interactable.container_data.is_item:
 			remove_interactable()
 
 func hold_item() -> void:
@@ -44,6 +44,12 @@ func drop_held_item() -> void:
 func use_held_item() -> void:
 	gui.use_item(manager.held_item)
 	manager.held_item = null
+
+func get_lock_state() -> bool:
+	return interactable.get_lock_state()
+
+func get_key_item() -> ItemData:
+	return interactable.get_key_item()
 
 func remove_interactable() -> void:
 	manager.remove_hovered_area(interactable)

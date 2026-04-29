@@ -19,6 +19,9 @@ func _ready() -> void:
 		sprite = Sprite2D.new()
 		add_child(sprite)
 	
+	if not container_data:
+		container_data = ContainerData.new()
+	
 	create_interactions()
 	
 	prop_data.texture_changed.connect(update_texture)
@@ -30,7 +33,7 @@ func create_interactions() -> void:
 		interaction_list.back().description = prop_data.description
 		
 		interaction_list.append(GetItemStrategy.new())
-		interaction_list.back().item_data = prop_data.held_item
+		interaction_list.back().item_data = container_data.held_item
 		
 		interaction_list.append(UseItemStrategy.new())
 

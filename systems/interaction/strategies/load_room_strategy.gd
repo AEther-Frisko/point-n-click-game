@@ -7,10 +7,10 @@ func _init() -> void:
 		verb = Verbs.walk
 
 func can_interact(context: InteractionContext) -> bool:
-	if context.interactable is Door:
-		return not context.interactable.is_locked
-	else:
-		return true
+	return not context.get_lock_state()
 
 func interact(context: InteractionContext) -> void:
-	context.load_room(destination)
+	var dest = destination
+	if not dest:
+		dest = context.interactable.destination
+	context.load_room(dest)

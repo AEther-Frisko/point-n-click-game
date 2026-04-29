@@ -16,7 +16,7 @@ class_name Item extends Interactable
 	set(new_data):
 		item_data = new_data
 		if new_data.texture:
-			update_texture(new_data.texture)
+			update_texture()
 
 func _ready() -> void:
 	add_to_group("interactables")
@@ -26,7 +26,7 @@ func _ready() -> void:
 		add_child(texture_rect)
 	if not item_data:
 		item_data = ItemData.new()
-	item_data.texture_changed.connect(update_texture.bind(item_data.texture))
+	item_data.texture_changed.connect(update_texture)
 	
 	create_interactions()
 	
@@ -40,8 +40,8 @@ func create_interactions() -> void:
 		interaction_list.append(UseItemStrategy.new())
 
 ## Updates the [member texture_rect]'s [Texture2D] to match the current [ItemData].
-func update_texture(new_texture: Texture2D) -> void:
-	texture_rect.texture = new_texture
+func update_texture() -> void:
+	texture_rect.texture = item_data.texture
 
 ## Triggered when the [Item] detects user input, but only cares about mouse clicks.
 func _on_input(event: InputEvent) -> void:

@@ -5,6 +5,7 @@ class_name InteractionStrategy extends Resource
 ## Defines what type of interaction this is, such as the cursor type to use.
 @export var verb: Verb
 
+## Returns whether or not this meets its interaction criteria.
 func can_interact(_context: InteractionContext) -> bool:
 	return true
 

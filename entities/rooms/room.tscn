@@ -4,10 +4,16 @@
 [ext_resource type="PackedScene" uid="uid://q57c5k076cra" path="res://entities/props/prop.tscn" id="1_gfcs5"]
 [ext_resource type="Script" uid="uid://dvdndyww02s8t" path="res://entities/props/prop_data.gd" id="3_3rrti"]
 [ext_resource type="Texture2D" uid="uid://boau6tul4tt8g" path="res://entities/props/test_prop_1.png" id="4_wv86s"]
+[ext_resource type="Script" uid="uid://dq8a57b1tj3bl" path="res://systems/interaction/strategies/interaction_strategy.gd" id="5_goa68"]
 [ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="5_wv86s"]
 [ext_resource type="Script" uid="uid://dapxy6n44rykv" path="res://entities/doors/door.gd" id="6_pl5rr"]
+[ext_resource type="Script" uid="uid://cqfj6wrx4rg80" path="res://systems/interaction/strategies/examine_strategy.gd" id="6_ujybf"]
 [ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="7_bwubf"]
+[ext_resource type="Script" uid="uid://bvck6qm3mlmqp" path="res://systems/interaction/strategies/get_item_strategy.gd" id="7_shc4y"]
+[ext_resource type="Script" uid="uid://djtx5hce51d6x" path="res://systems/interaction/strategies/use_item_strategy.gd" id="8_iierw"]
 [ext_resource type="Resource" uid="uid://0tw3n1hkhdvt" path="res://entities/items/cube_key.tres" id="8_ujybf"]
+[ext_resource type="Script" uid="uid://b087vt2g6s6el" path="res://systems/interaction/container_data.gd" id="11_ujybf"]
+[ext_resource type="Script" uid="uid://frde72m8ox7y" path="res://systems/interaction/lock_data.gd" id="12_goa68"]
 
 [sub_resource type="Resource" id="Resource_pl5rr"]
 script = ExtResource("3_3rrti")
@@ -15,13 +21,44 @@ description = "A strange table."
 texture = ExtResource("4_wv86s")
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
 
+[sub_resource type="Resource" id="Resource_svplx"]
+script = ExtResource("6_ujybf")
+description = "A strange table."
+
+[sub_resource type="Resource" id="Resource_gjeip"]
+script = ExtResource("7_shc4y")
+
+[sub_resource type="Resource" id="Resource_3fqwk"]
+script = ExtResource("8_iierw")
+
 [sub_resource type="Resource" id="Resource_bwubf"]
 script = ExtResource("3_3rrti")
 description = "Grey cube..."
 texture = ExtResource("5_wv86s")
+metadata/_custom_type_script = "uid://dvdndyww02s8t"
+
+[sub_resource type="Resource" id="Resource_4iyoi"]
+script = ExtResource("6_ujybf")
+description = "Grey cube..."
+
+[sub_resource type="Resource" id="Resource_d5wac"]
+script = ExtResource("7_shc4y")
+item_data = ExtResource("8_ujybf")
+
+[sub_resource type="Resource" id="Resource_4gvwj"]
+script = ExtResource("8_iierw")
+
+[sub_resource type="Resource" id="Resource_shc4y"]
+script = ExtResource("11_ujybf")
 held_item = ExtResource("8_ujybf")
 is_item = true
-metadata/_custom_type_script = "uid://dvdndyww02s8t"
+metadata/_custom_type_script = "uid://b087vt2g6s6el"
+
+[sub_resource type="Resource" id="Resource_ujybf"]
+script = ExtResource("12_goa68")
+is_locked = true
+key_item = ExtResource("8_ujybf")
+metadata/_custom_type_script = "uid://frde72m8ox7y"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwubf"]
 size = Vector2(153, 301)
@@ -37,10 +74,13 @@ texture = ExtResource("1_4jni1")
 [node name="Prop" parent="Props" unique_id=1491848127 instance=ExtResource("1_gfcs5")]
 position = Vector2(297, 875)
 prop_data = SubResource("Resource_pl5rr")
+interaction_list = Array[ExtResource("5_goa68")]([SubResource("Resource_svplx"), SubResource("Resource_gjeip"), SubResource("Resource_3fqwk")])
 
 [node name="Prop2" parent="Props" unique_id=1237188023 instance=ExtResource("1_gfcs5")]
 position = Vector2(324, 704)
 prop_data = SubResource("Resource_bwubf")
+interaction_list = Array[ExtResource("5_goa68")]([SubResource("Resource_4iyoi"), SubResource("Resource_d5wac"), SubResource("Resource_4gvwj")])
+container_data = SubResource("Resource_shc4y")
 
 [node name="Doors" type="Node2D" parent="." unique_id=2070332888]
 
@@ -48,8 +88,7 @@ prop_data = SubResource("Resource_bwubf")
 position = Vector2(944, 693)
 script = ExtResource("6_pl5rr")
 destination = "room_2"
-is_locked = true
-expected_item = ExtResource("8_ujybf")
+lock_data = SubResource("Resource_ujybf")
 metadata/_custom_type_script = "uid://yrbq3bfk1sid"
 
 [node name="ClickableArea" type="Area2D" parent="Doors/Door" unique_id=1652914156]

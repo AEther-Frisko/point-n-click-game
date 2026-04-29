@@ -8,19 +8,23 @@
 [ext_resource type="Texture2D" uid="uid://d0udqwdrdcoru" path="res://entities/props/test_prop_2.png" id="4_e58jg"]
 [ext_resource type="Script" uid="uid://dapxy6n44rykv" path="res://entities/doors/door.gd" id="5_e58jg"]
 [ext_resource type="Script" uid="uid://g6sjksb4ootf" path="res://systems/interaction/clickable_area.gd" id="6_uobik"]
-
-[sub_resource type="Resource" id="Resource_uksj3"]
-script = ExtResource("3_pncls")
-item_name = "Item 2"
-texture = ExtResource("4_5fko0")
-metadata/_custom_type_script = "uid://bjarm57wje3pb"
+[ext_resource type="Script" uid="uid://b087vt2g6s6el" path="res://systems/interaction/container_data.gd" id="7_x73i1"]
 
 [sub_resource type="Resource" id="Resource_uobik"]
 script = ExtResource("3_2ahal")
 description = "Big cube....."
 texture = ExtResource("4_e58jg")
-held_item = SubResource("Resource_uksj3")
 metadata/_custom_type_script = "uid://dvdndyww02s8t"
+
+[sub_resource type="Resource" id="Resource_rx4gx"]
+script = ExtResource("3_pncls")
+item_name = "Some Item"
+texture = ExtResource("4_5fko0")
+metadata/_custom_type_script = "uid://bjarm57wje3pb"
+
+[sub_resource type="Resource" id="Resource_oq6me"]
+script = ExtResource("7_x73i1")
+held_item = SubResource("Resource_rx4gx")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pncls"]
 size = Vector2(154, 305)
@@ -37,6 +41,7 @@ texture = ExtResource("1_87bpn")
 position = Vector2(1351, 774)
 scale = Vector2(1.5, 1.5)
 prop_data = SubResource("Resource_uobik")
+container_data = SubResource("Resource_oq6me")
 
 [node name="Doors" type="Node2D" parent="." unique_id=679481030]
 
